@@ -1,0 +1,54 @@
+---
+import { business } from "../business.config.js";
+---
+
+<section style="padding:100px 24px; background:#0d1428; text-align:center;">
+  <div
+    style="max-width:800px; margin:0 auto; background:#161f38; padding:60px 40px; border-radius:15px; border:1px solid rgba(255,255,255,0.1);"
+  >
+    <h2
+      style="font-weight:900; font-size:2.5rem; margin-bottom:10px; text-transform:uppercase;"
+    >
+      How was your experience?
+    </h2>
+    <p style="opacity:0.6; margin-bottom:40px;">
+      Tap a star to rate {business.name}
+    </p>
+
+    <div
+      style="display:flex; justify-content:center; gap:15px; font-size:3.5rem; cursor:pointer; color:rgba(255,255,255,0.1);"
+      id="star-gate"
+    >
+      <span class="star-item" data-val="1">★</span>
+      <span class="star-item" data-val="2">★</span>
+      <span class="star-item" data-val="3">★</span>
+      <span class="star-item" data-val="4">★</span>
+      <span class="star-item" data-val="5">★</span>
+    </div>
+  </div>
+</section>
+
+<script
+  is:inline
+  define:vars={{ reviewUrl: business.ghlSettings.publicReviewUrl }}
+>
+  const stars = document.querySelectorAll(".star-item");
+  stars.forEach((star) => {
+    star.addEventListener("click", () => {
+      const val = parseInt(star.getAttribute("data-val"));
+      if (val >= 4) window.open(reviewUrl, "_blank");
+      else
+        alert(
+          "Thank you for your feedback! A manager has been notified to reach out to you personally.",
+        );
+    });
+    star.addEventListener("mouseenter", () => {
+      const val = star.dataset.val;
+      stars.forEach(
+        (s) =>
+          (s.style.color =
+            s.dataset.val <= val ? "#F2CA52" : "rgba(255,255,255,0.1)"),
+      );
+    });
+  });
+</script>

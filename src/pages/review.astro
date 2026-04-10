@@ -1,0 +1,171 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { business } from '../business.config.js';
+---
+
+<Layout title={`Review | ${business.name}`}>
+
+  <!-- Navy header -->
+  <section style="background:var(--primary); padding:60px 24px 40px; text-align:center;">
+    <div style="max-width:600px; margin:0 auto;">
+      {business.logoUrl
+        ? <img src={business.logoUrl} alt={business.name} style="height:60px; width:auto; margin:0 auto 16px; display:block;" />
+        : <h1 style="font-size:clamp(1.6rem, 4vw, 2.4rem); color:var(--white); margin-bottom:4px;">{business.name}</h1>
+      }
+      <p style="color:var(--accent); font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em;">{business.tagline}</p>
+    </div>
+  </section>
+
+  <!-- Review card -->
+  <section style="background:var(--primary); padding:0 24px 80px;">
+    <div style="max-width:560px; margin:0 auto;">
+      <div id="review-card" data-review-url={business.googleReviewUrl} style="background:var(--white); border-radius:12px; padding:48px 40px; text-align:center; box-shadow:0 8px 40px rgba(0,0,0,0.3);">
+
+        <!-- Step 1: Star rating -->
+        <div id="step-rating">
+          <h2 style="font-family:var(--font-heading); font-weight:900; font-size:1.4rem; text-transform:uppercase; color:#000; margin-bottom:32px;">How would you rate us?</h2>
+          <div id="star-row" style="display:flex; justify-content:center; gap:8px; margin-bottom:24px;">
+            {[1,2,3,4,5].map((n) => (
+              <button data-star={n} class="star-btn" style="background:none; border:none; cursor:pointer; font-size:2.8rem; color:#ddd; transition:color 0.15s; padding:4px;">★</button>
+            ))}
+          </div>
+          <p style="color:#999; font-size:0.85rem;">Click a star to rate your experience</p>
+        </div>
+
+        <!-- Step 2: Internal feedback form (1-3 stars) -->
+        <div id="step-feedback" style="display:none; text-align:left;">
+          <h3 style="font-family:var(--font-heading); font-weight:900; font-size:1.1rem; text-transform:uppercase; color:#000; margin-bottom:8px;">Sorry to hear that you're not satisfied.</h3>
+          <p style="color:#666; font-size:0.85rem; margin-bottom:24px; line-height:1.5;">Please provide us with your feedback and we'll do our best to improve.</p>
+          <form id="feedback-form" data-webhook={business.ghlWebhookUrl} style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <label style="font-family:var(--font-heading); font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#333; letter-spacing:0.05em; display:block; margin-bottom:6px;">Name (optional)</label>
+              <input type="text" name="name" placeholder="Name" style="background:#f5f5f5; border:1px solid #ddd; color:#333; padding:12px 14px;" />
+            </div>
+            <div>
+              <label style="font-family:var(--font-heading); font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#333; letter-spacing:0.05em; display:block; margin-bottom:6px;">Email (optional)</label>
+              <input type="email" name="email" placeholder="Email" style="background:#f5f5f5; border:1px solid #ddd; color:#333; padding:12px 14px;" />
+            </div>
+            <div>
+              <label style="font-family:var(--font-heading); font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#333; letter-spacing:0.05em; display:block; margin-bottom:6px;">Your Feedback (Please let us know what can we do to improve?)</label>
+              <textarea name="message" placeholder="Your feedback..." rows="4" style="background:#f5f5f5; border:1px solid #ddd; color:#333; resize:none; padding:12px 14px;"></textarea>
+            </div>
+            <div style="text-align:right;">
+              <button type="submit" id="feedback-submit" style="background:var(--primary); color:var(--white); font-family:var(--font-heading); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:12px 32px; border-radius:5px; border:none; cursor:pointer; font-size:0.85rem;">Submit</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Step 3: Thank you (after internal submit) -->
+        <div id="step-thanks" style="display:none; text-align:center; border:2px solid var(--accent); border-radius:8px; padding:32px;">
+          <p style="color:#333; font-size:0.95rem; margin-bottom:4px;">I'm sorry we missed the mark. 😔</p>
+          <p style="color:#666; font-size:0.85rem; line-height:1.5;">Thank you for letting us know. We value your review regardless and appreciate you taking a few moments to share where we can improve.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<script>
+  const stars = document.querySelectorAll('.star-btn');
+  const stepRating = document.getElementById('step-rating');
+  const stepFeedback = document.getElementById('step-feedback');
+  const stepThanks = document.getElementById('step-thanks');
+  const feedbackForm = document.getElementById('feedback-form');
+  const googleUrl = document.querySelector('meta[name="google-review-url"]')?.getAttribute('content') || '';
+
+  let selectedRating = 0;
+
+  // Hover effect
+  stars.forEach((star, i) => {
+    star.addEventListener('mouseenter', () => {
+      stars.forEach((s, j) => {
+        (s as HTMLElement).style.color = j <= i ? '#F2CA52' : '#ddd';
+      });
+    });
+  });
+
+  document.getElementById('star-row')?.addEventListener('mouseleave', () => {
+    stars.forEach((s, j) => {
+      (s as HTMLElement).style.color = j < selectedRating ? '#F2CA52' : '#ddd';
+    });
+  });
+
+  // Click handler
+  stars.forEach((star, i) => {
+    star.addEventListener('click', () => {
+      selectedRating = i + 1;
+      stars.forEach((s, j) => {
+        (s as HTMLElement).style.color = j <= i ? '#F2CA52' : '#ddd';
+      });
+
+      // Small delay so user sees their selection
+      setTimeout(() => {
+        if (selectedRating >= 4) {
+          // 4-5 stars → open Google review
+          const reviewUrl = (document.getElementById('review-card') as HTMLElement)?.dataset.reviewUrl;
+          if (reviewUrl) {
+            window.open(reviewUrl, '_blank');
+          }
+          if (stepRating) stepRating.style.display = 'none';
+          if (stepThanks) {
+            stepThanks.style.display = 'block';
+            const p1 = stepThanks.querySelector('p');
+            if (p1) p1.textContent = 'Thank you for your amazing review! ⭐';
+            const p2 = stepThanks.querySelectorAll('p')[1];
+            if (p2) p2.textContent = 'Your support means the world to us. We just opened Google Reviews for you — if it didn\'t open, click the button below.';
+            // Add a manual link button
+            const linkBtn = document.createElement('a');
+            linkBtn.href = (document.getElementById('review-card') as HTMLElement)?.dataset.reviewUrl || '#';
+            linkBtn.target = '_blank';
+            linkBtn.textContent = 'Leave Google Review →';
+            linkBtn.style.cssText = 'display:inline-block; margin-top:16px; background:#182240; color:#fff; font-family:var(--font-heading); font-weight:700; text-transform:uppercase; padding:12px 28px; border-radius:5px; text-decoration:none; font-size:0.85rem;';
+            stepThanks.appendChild(linkBtn);
+          }
+        } else {
+          // 1-3 stars → show feedback form
+          if (stepRating) stepRating.style.display = 'none';
+          if (stepFeedback) stepFeedback.style.display = 'block';
+        }
+      }, 400);
+    });
+  });
+
+  // Feedback form submit
+  feedbackForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const webhook = feedbackForm.getAttribute('data-webhook');
+    const btn = document.getElementById('feedback-submit') as HTMLButtonElement;
+
+    const data = {
+      name: (feedbackForm.querySelector('[name="name"]') as HTMLInputElement).value,
+      email: (feedbackForm.querySelector('[name="email"]') as HTMLInputElement).value,
+      message: (feedbackForm.querySelector('[name="message"]') as HTMLTextAreaElement).value,
+      rating: selectedRating,
+      source: 'review-gate'
+    };
+
+    if (webhook) {
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      fetch(webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        if (stepFeedback) stepFeedback.style.display = 'none';
+        if (stepThanks) stepThanks.style.display = 'block';
+      })
+      .catch(() => {
+        if (stepFeedback) stepFeedback.style.display = 'none';
+        if (stepThanks) stepThanks.style.display = 'block';
+      });
+    } else {
+      if (stepFeedback) stepFeedback.style.display = 'none';
+      if (stepThanks) stepThanks.style.display = 'block';
+    }
+  });
+</script>

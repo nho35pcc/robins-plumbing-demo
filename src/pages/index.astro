@@ -1,0 +1,639 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { business } from '../business.config.js';
+---
+
+<Layout>
+
+  <!-- ========== NAVIGATION ========== -->
+  <header class="site-header" id="site-header">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:72px;">
+
+      <a href="/" style="display:flex; align-items:center; text-decoration:none;">
+        {business.logoUrl
+          ? <img src={business.logoUrl} alt={business.name} style="height:44px; width:auto;" />
+          : <span style="font-family:var(--font-heading); font-weight:900; font-size:1.3rem; color:var(--white); text-transform:uppercase; letter-spacing:-0.02em;">{business.name}</span>
+        }
+      </a>
+
+      <nav style="display:flex; align-items:center; gap:32px;" class="desktop-nav">
+        <a href="/services" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9; transition:opacity 0.2s;">Services</a>
+        <a href="/about" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9; transition:opacity 0.2s;">About</a>
+        <a href="/gallery" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9; transition:opacity 0.2s;">Gallery</a>
+        <a href="/contact" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9; transition:opacity 0.2s;">Contact</a>
+        {business.photoPageEnabled && <a href="/photo" style="color:var(--accent); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9; transition:opacity 0.2s;">Photo Diagnosis</a>}
+      </nav>
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <a href={`tel:${business.phone}`} class="header-phone" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.9rem; display:flex; align-items:center; gap:6px;">
+          <span>📞</span> {business.phone}
+        </a>
+        <a href="#" data-quote-modal class="btn-primary quote-cta-btn" style="padding:10px 20px; font-size:0.8rem;">Get Free Quote</a>
+      </div>
+
+      <button id="hamburger-btn" class="hamburger-btn" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-nav" aria-hidden="true">
+    <a href="/services">Services</a>
+    <a href="/about">About</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/contact">Contact</a>
+    {business.photoPageEnabled && <a href="/photo">Photo Diagnosis</a>}
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section id="hero" style="position:relative; overflow:hidden; min-height:100vh; display:flex; align-items:center; padding-top:72px;">
+
+    <!-- Ken Burns background -->
+    <div style="position:absolute; inset:0; overflow:hidden;">
+      <div id="hero-bg" style={`position:absolute; inset:-15%; background-image:url('${business.heroImageUrl}'); background-size:cover; background-position:center; will-change:transform;`}></div>
+    </div>
+
+    <!-- Gradient overlay -->
+    <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(24,34,64,0.88) 0%, rgba(24,34,64,0.45) 55%, rgba(24,34,64,0.2) 100%);"></div>
+
+    <div class="hero-grid">
+
+      <div style="position:relative; z-index:2;">
+        <span class="section-label" style="color:rgba(242,202,82,0.9);">Professional · Licensed · Insured</span>
+
+        {(business.heroHeadlineAccent ?? '') !== ''
+          ? (
+            <h1 style="font-size:clamp(2.8rem, 6vw, 5rem); color:var(--white); margin-bottom:16px; line-height:1.05;">
+              <span style="color:var(--accent);">{business.heroHeadlineAccent}</span>{' '}
+              {business.tagline}
+            </h1>
+          )
+          : (
+            <h1 style="font-size:clamp(2.8rem, 6vw, 5rem); color:var(--white); margin-bottom:16px; line-height:1.05;">
+              {business.tagline}
+            </h1>
+          )
+        }
+
+        <p style="font-size:1.1rem; color:var(--text-light); margin-bottom:20px; max-width:480px; line-height:1.6; font-weight:400;">
+          {business.subtagline}
+        </p>
+
+        <!-- Star rating row -->
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:32px; flex-wrap:wrap;">
+          <div style="display:flex; gap:1px;">
+            {[1,2,3,4,5].map(() => <span style="color:var(--accent); font-size:1rem;">★</span>)}
+          </div>
+          <span style="color:var(--text-light); font-size:0.88rem;">
+            <strong style="color:var(--white);">{business.heroReviewRating ?? '4.9'}</strong>
+            {' · Based on '}
+            <strong style="color:var(--white);">{business.heroReviewCount ?? '200+'}</strong>
+            {' '}{business.heroReviewSource ?? 'Google'} Reviews
+          </span>
+        </div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="#contact-form" class="btn-primary" onclick="event.preventDefault();document.getElementById('contact-form').scrollIntoView({behavior:'smooth',block:'center'})">Get a Free Quote</a>
+          <a href={`tel:${business.phone}`} class="btn-outline">Call {business.phone}</a>
+        </div>
+      </div>
+
+      <!-- Hero Form Card — glassmorphism -->
+      <div id="contact-form" style="position:relative; z-index:2; background:rgba(24,34,64,0.88); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:36px; box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+        <div style="text-align:center; margin-bottom:20px;">
+          {business.logoUrl
+            ? <img src={business.logoUrl} alt={business.name} style="height:56px; width:auto; margin:0 auto 10px;" />
+            : <div style="font-family:var(--font-heading); font-weight:900; font-size:1rem; color:var(--white); text-transform:uppercase; margin-bottom:4px;">{business.name}</div>
+          }
+          <div style="font-family:'Lora',serif; font-style:italic; font-size:0.85rem; color:var(--accent);">Get Your Free Estimate</div>
+        </div>
+
+        {business.ghlFormEmbed
+          ? <Fragment set:html={business.ghlFormEmbed} />
+          : (
+            <form id="hero-quote-form" data-webhook={business.ghlWebhookUrl} style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <input type="text" name="firstName" placeholder="First Name *" required />
+                <input type="text" name="lastName" placeholder="Last Name *" required />
+              </div>
+              <input type="tel" name="phone" placeholder="Phone *" required />
+              <input type="email" name="email" placeholder="Email" />
+              <textarea name="message" placeholder="Tell us about your project..." rows="3" style="resize:none;"></textarea>
+              <p style="font-size:0.7rem; color:var(--text-muted); line-height:1.4;">
+                By submitting, you agree to receive communications from {business.name}. Reply STOP to opt out.
+              </p>
+              <button type="submit" id="hero-submit-btn" class="btn-primary" style="width:100%; text-align:center; font-size:1rem; padding:16px;">
+                Send My Free Quote →
+              </button>
+            </form>
+          )
+        }
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== MARQUEE TRUST BAR ========== -->
+  <div class="marquee-wrapper" aria-hidden="true">
+    <div class="marquee-track">
+      {[...(business.badges || []), ...(business.badges || [])].map((badge) => (
+        <div class="marquee-item">
+          <span class="marquee-dot">✦</span>
+          {badge}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ========== SERVICES ========== -->
+  <section id="services" style="background:#ffffff; padding:100px 24px;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:48px;" class="reveal">
+        <span class="section-label">What We Offer</span>
+        <h2 class="section-title" style="font-size:clamp(2rem, 4vw, 3rem); color:var(--primary);">Our Services</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;" class="stagger-children">
+        {business.services.slice(0, 4).map((service) => (
+          <a href={service.slug ? `/services/${service.slug}` : '/services'} class="svc-card" style="position:relative; display:block; overflow:hidden; border-radius:4px; aspect-ratio:16/10; text-decoration:none;">
+            <img src={service.image || business.heroImageUrl} alt={service.name} style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;" />
+            <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0) 100%);"></div>
+            <div class="svc-card-content" style="position:absolute; bottom:0; left:0; right:0; padding:20px 24px; transition:transform 0.3s ease;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <h3 style="font-family:var(--font-heading); font-weight:900; font-size:clamp(0.85rem, 1.5vw, 1.1rem); text-transform:uppercase; letter-spacing:0.03em; color:var(--white); margin:0;">{service.name}</h3>
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; border:2px solid var(--accent); color:var(--accent); font-size:0.75rem; flex-shrink:0;">→</span>
+              </div>
+              <p class="svc-card-desc" style="color:var(--text-light); font-size:0.85rem; line-height:1.5; margin-top:10px; max-height:0; overflow:hidden; opacity:0; transition:max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;">{service.description || ''}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div style="text-align:center; margin-top:40px;" class="reveal">
+        <a href="/services" style="color:var(--primary); font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; text-decoration:none; margin-right:24px;">See All Services →</a>
+        <a href="#" data-quote-modal class="btn-primary">Get a Free Quote on Any Service</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PROCESS ========== -->
+  <section id="process" style="background:#000; padding:100px 24px; background-image:repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(242,202,82,0.04) 40px, rgba(242,202,82,0.04) 41px);">
+    <div style="max-width:1000px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:56px;" class="reveal">
+        <span class="section-label">Simple & Easy</span>
+        <h2 class="section-title" style="font-size:clamp(2rem, 4vw, 3rem);">Our Process</h2>
+        <p style="color:var(--text-muted); font-size:0.95rem; margin-top:12px; max-width:500px; margin-left:auto; margin-right:auto;">Getting started is simple. Here's how it works.</p>
+      </div>
+      <div class="process-grid stagger-children">
+        {(business.process || []).map((item) => (
+          <div style="text-align:center; position:relative;">
+            <div style="width:68px; height:68px; border-radius:50%; background:var(--accent); color:#000; font-family:var(--font-heading); font-weight:900; font-size:1.5rem; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; box-shadow:0 4px 20px rgba(242,202,82,0.25);">
+              {item.step}
+            </div>
+            <h3 style="font-family:var(--font-heading); font-weight:700; font-size:0.8rem; text-transform:uppercase; color:var(--white); margin-bottom:8px; letter-spacing:0.04em;">{item.title}</h3>
+            <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+      <div style="text-align:center; margin-top:56px;" class="reveal">
+        <a href="#" data-quote-modal class="btn-primary">Start With a Free Quote</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section id="about" style="background:#ffffff; padding:100px 24px;">
+    <div style="max-width:1200px; margin:0 auto;" class="about-grid">
+      <div class="reveal-left" style="background:rgba(0,0,0,0.04); border-radius:12px; aspect-ratio:4/3; overflow:hidden;">
+        <img src={business.heroImageUrl} alt={business.name} style="width:100%; height:100%; object-fit:cover;" />
+      </div>
+      <div class="reveal-right">
+        <span class="section-label">Our Story</span>
+        <h2 class="section-title" style="font-size:clamp(1.8rem, 3.5vw, 2.8rem); margin-bottom:20px; color:var(--primary);">Your Trusted Local Expert</h2>
+        <p style="color:rgba(0,0,0,0.65); line-height:1.7; font-size:1rem; margin-bottom:16px;">
+          {business.description}
+        </p>
+        <p style="color:rgba(0,0,0,0.5); line-height:1.7; font-size:0.95rem; margin-bottom:32px;">
+          We treat every property as if it were our own — with attention to detail, professional equipment, and a commitment to results you can see.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          {(business.badges || []).map((badge) => (
+            <div style="background:rgba(242,202,82,0.12); border:1px solid var(--accent); border-radius:5px; padding:8px 14px; font-family:var(--font-heading); font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--primary); letter-spacing:0.05em;">
+              {badge}
+            </div>
+          ))}
+        </div>
+        {business.socialLinks && business.socialLinks.length > 0 && (
+          <div style="display:flex; gap:12px; margin-top:24px;">
+            {(business.socialLinks || []).map((link) => (
+              <a href={link.url} target="_blank" rel="noopener noreferrer" class="social-link" style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background:rgba(24,34,64,0.07); border:1px solid rgba(24,34,64,0.2); color:var(--primary); text-decoration:none; font-size:0.8rem; font-family:var(--font-heading); font-weight:700; text-transform:uppercase; transition:all 0.2s;" title={link.label}>
+                {link.platform === 'google' && <span>G</span>}
+                {link.platform === 'facebook' && <span>f</span>}
+                {link.platform === 'yelp' && <span>Y</span>}
+                {link.platform === 'instagram' && <span>IG</span>}
+                {link.platform === 'tiktok' && <span>TT</span>}
+                {link.platform === 'youtube' && <span>YT</span>}
+                {link.platform === 'twitter' && <span>X</span>}
+                {link.platform === 'linkedin' && <span>in</span>}
+                {link.platform === 'nextdoor' && <span>ND</span>}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GALLERY ========== -->
+  <section id="gallery" style="background:#000; padding:100px 24px;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:16px;" class="reveal">
+        <div>
+          <span class="section-label">Our Work</span>
+          <h2 class="section-title" style="font-size:clamp(2rem, 4vw, 3rem);">See the Results</h2>
+        </div>
+        <a href="/gallery" style="color:var(--accent); font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; text-decoration:none;">See All Photos →</a>
+      </div>
+      <div class="gallery-grid stagger-children">
+        {(business.galleryImages || []).slice(0, 5).map((img, i) => (
+          <div style={i === 0 ? 'grid-row:span 2; border-radius:8px; overflow:hidden;' : i === 4 ? 'grid-column:span 2; border-radius:8px; overflow:hidden;' : 'border-radius:8px; overflow:hidden;'}>
+            <img src={img} alt={`${business.name} work photo ${i + 1}`} style="width:100%; height:100%; object-fit:cover;" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CREDENTIAL LOGO BAR (2.12) ========== -->
+  {(business.credentialLogos || []).length > 0 && (
+    <section style="background:#ffffff; padding:60px 24px;" class="reveal">
+      <div style="max-width:900px; margin:0 auto; text-align:center;">
+        <p style="font-family:'Lora',serif; font-style:italic; font-size:0.95rem; color:var(--accent); margin-bottom:28px; letter-spacing:0.02em;">Certified &amp; Trusted By</p>
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:32px;" class="stagger-children">
+          {(business.credentialLogos || []).map((logo) => (
+            <img
+              src={logo.imageUrl}
+              alt={logo.name}
+              class="credential-logo"
+              style="max-height:44px; width:auto; object-fit:contain;"
+              loading="lazy"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ========== REVIEWS ========== -->
+  <section id="reviews" style="background:var(--primary); padding:100px 24px;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:56px;" class="reveal">
+        <span class="section-label">What Customers Say</span>
+        <h2 class="section-title" style="font-size:clamp(2rem, 4vw, 3rem);">Real Reviews</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-bottom:40px;" class="stagger-children">
+        {(business.reviews || []).map((review) => (
+          <div class="review-card reveal-scale" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:32px;">
+            <div style="display:flex; gap:2px; margin-bottom:16px;">
+              {[1,2,3,4,5].map(() => <span style="color:var(--accent); font-size:1.1rem;">★</span>)}
+            </div>
+            <p style="color:var(--text-light); line-height:1.7; font-size:1rem; margin-bottom:20px; font-family:'Lora',serif; font-style:italic;">"{review.text}"</p>
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:700; font-size:0.9rem; color:var(--white);">{review.name}</div>
+              <div style="font-size:0.8rem; color:var(--text-muted);">{review.location}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style="text-align:center;">
+        <div style="display:inline-flex; flex-direction:column; align-items:center; background:rgba(0,0,0,0.3); border:2px solid var(--accent); border-radius:10px; padding:24px 40px; gap:12px;">
+          <div style="display:flex; gap:4px;">
+            {[1,2,3,4,5].map(() => <span style="color:var(--accent); font-size:1.5rem;">★</span>)}
+          </div>
+          <div style="font-family:var(--font-heading); font-weight:700; color:var(--white); text-transform:uppercase; letter-spacing:0.05em;">Review Us on Google</div>
+          <a href="/review" class="btn-primary" style="font-size:0.85rem; padding:10px 24px;">Leave a Review</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SERVICE AREAS ========== -->
+  <section id="areas" style="background:#f8f8f8; padding:100px 24px;">
+    <div style="max-width:1200px; margin:0 auto;" class="areas-grid">
+      <div class="reveal-left">
+        <span class="section-label">Where We Work</span>
+        <h2 class="section-title" style="font-size:clamp(1.8rem, 3.5vw, 2.8rem); margin-bottom:32px; color:var(--primary);">Areas We Service</h2>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          {(business.serviceAreas || []).map((area) => (
+            <div style="display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid rgba(24,34,64,0.1);">
+              <span style="color:var(--accent); font-size:0.8rem;">✓</span>
+              <span style="font-size:0.9rem; color:rgba(24,34,64,0.75);">{area}</span>
+            </div>
+          ))}
+        </div>
+        <div style="margin-top:32px;">
+          <a href="#" data-quote-modal class="btn-primary">Get a Quote in Your Area</a>
+        </div>
+      </div>
+      <div style="background:rgba(24,34,64,0.05); border-radius:12px; overflow:hidden; aspect-ratio:1; border:1px solid rgba(24,34,64,0.12);" class="reveal">
+        {business.googleMapsApiKey && business.googleMapsApiKey !== "YOUR_GOOGLE_MAPS_API_KEY"
+          ? (
+            <iframe
+              src={`https://www.google.com/maps/embed/v1/place?key=${business.googleMapsApiKey}&q=${encodeURIComponent(business.address + ', ' + business.city + ', ' + business.state + ' ' + business.zip)}`}
+              width="100%"
+              height="100%"
+              style="border:0; min-height:400px;"
+              allowfullscreen=""
+              loading="lazy"
+            />
+          )
+          : (
+            <iframe
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(business.address + ', ' + business.city + ', ' + business.state + ' ' + business.zip)}&output=embed`}
+              width="100%"
+              height="100%"
+              style="border:0; min-height:400px;"
+              allowfullscreen=""
+              loading="lazy"
+            />
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER CTA ========== -->
+  <section style="background:var(--accent); padding:80px 24px; text-align:center;">
+    <div style="max-width:700px; margin:0 auto;">
+      <h2 style="font-family:var(--font-heading); font-weight:900; font-size:clamp(1.8rem, 4vw, 3rem); text-transform:uppercase; color:#000; margin-bottom:16px;">
+        Ready to Get Started?
+      </h2>
+      <p style="color:rgba(0,0,0,0.7); font-size:1.1rem; margin-bottom:32px;">
+        Get your free estimate today. No pressure, no obligation.
+      </p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="#" data-quote-modal style="background:#000; color:var(--white); font-family:var(--font-heading); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:16px 32px; border-radius:5px; text-decoration:none; font-size:1rem;">
+          Get a Free Quote
+        </a>
+        <a href={`tel:${business.phone}`} style="background:transparent; color:#000; font-family:var(--font-heading); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; padding:14px 30px; border-radius:5px; text-decoration:none; font-size:1rem; border:2px solid #000;">
+          Call {business.phone}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer style="background:var(--primary); padding:48px 24px 24px;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div class="footer-grid">
+
+        <div>
+          <div style="font-family:var(--font-heading); font-weight:900; font-size:1.2rem; color:var(--white); text-transform:uppercase; margin-bottom:12px;">{business.name}</div>
+          <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.6; max-width:280px; margin-bottom:16px;">{business.description}</p>
+          <div style="font-size:0.85rem; color:var(--text-muted);">
+            <div style="margin-bottom:4px;">📞 <a href={`tel:${business.phone}`} style="color:var(--accent); text-decoration:none;">{business.phone}</a></div>
+            <div style="margin-bottom:4px;">✉️ {business.email}</div>
+            <div>📍 {business.address}</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--white); margin-bottom:16px;">Quick Links</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="/" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">Home</a>
+            <a href="/services" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">Services</a>
+            <a href="/gallery" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">Gallery</a>
+            <a href="/about" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">About Us</a>
+            <a href="/contact" style="color:var(--text-muted); text-decoration:none; font-size:0.85rem;">Contact</a>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--white); margin-bottom:16px;">Business Hours</div>
+          <div style="font-size:0.85rem; color:var(--text-muted); line-height:1.8;">
+            <div>{business.hours}</div>
+            {business.emergency && <div style="color:var(--accent); font-weight:700; margin-top:8px;">24/7 Emergency Service</div>}
+          </div>
+        </div>
+
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div style="font-size:0.78rem; color:var(--text-muted);">© 2025 {business.name}. All Rights Reserved.</div>
+        <div style="display:flex; gap:20px;">
+          <a href="/privacy" style="font-size:0.78rem; color:var(--text-muted); text-decoration:none;">Privacy Policy</a>
+          <a href="/terms" style="font-size:0.78rem; color:var(--text-muted); text-decoration:none;">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</Layout>
+
+<script>
+  // Ken Burns parallax — hero background shifts at 0.25 ratio as you scroll
+  const heroBg = document.getElementById('hero-bg');
+  if (heroBg) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY * 0.25;
+      heroBg.style.transform = `translateY(${y}px)`;
+    }, { passive: true });
+  }
+
+  // Hero form submission
+  const heroForm = document.getElementById('hero-quote-form');
+  if (heroForm) {
+    heroForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const webhook = heroForm.getAttribute('data-webhook');
+      const btn = document.getElementById('hero-submit-btn');
+
+      if (!webhook) {
+        window.location.href = '/contact';
+        return;
+      }
+
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      const data = {
+        firstName: heroForm.querySelector('[name="firstName"]').value,
+        lastName: heroForm.querySelector('[name="lastName"]').value,
+        phone: heroForm.querySelector('[name="phone"]').value,
+        email: heroForm.querySelector('[name="email"]').value,
+        message: heroForm.querySelector('[name="message"]').value,
+        source: 'homepage-hero'
+      };
+
+      fetch(webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('fail');
+        // Show success state — all content is static/safe, no user input rendered
+        var successDiv = document.createElement('div');
+        successDiv.style.cssText = 'text-align:center; padding:20px 0;';
+        var icon = document.createElement('div');
+        icon.style.cssText = 'font-size:2.5rem; margin-bottom:12px;';
+        icon.textContent = '\u2705';
+        var heading = document.createElement('h3');
+        heading.style.cssText = 'color:var(--white); font-size:1.3rem; margin-bottom:8px;';
+        heading.textContent = 'Quote Request Sent!';
+        var msg = document.createElement('p');
+        msg.style.cssText = 'color:var(--text-muted); font-size:0.9rem;';
+        msg.textContent = "We'll get back to you shortly.";
+        successDiv.appendChild(icon);
+        successDiv.appendChild(heading);
+        successDiv.appendChild(msg);
+        heroForm.replaceWith(successDiv);
+      })
+      .catch(function() {
+        btn.textContent = 'Send My Free Quote \u2192';
+        btn.disabled = false;
+        alert('Something went wrong. Please call us directly.');
+      });
+    });
+  }
+
+  // Service card hover — reveal description
+  document.querySelectorAll('.svc-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      const desc = card.querySelector('.svc-card-desc') as HTMLElement;
+      if (desc) {
+        desc.style.maxHeight = '80px';
+        desc.style.opacity = '1';
+        desc.style.marginTop = '10px';
+      }
+    });
+    card.addEventListener('mouseleave', () => {
+      const desc = card.querySelector('.svc-card-desc') as HTMLElement;
+      if (desc) {
+        desc.style.maxHeight = '0';
+        desc.style.opacity = '0';
+        desc.style.marginTop = '0';
+      }
+    });
+  });
+</script>
+
+<style>
+  /* ===== PROCESS STEPS ===== */
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 768px) {
+    .process-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+  }
+  @media (max-width: 480px) {
+    .process-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ===== ABOUT ===== */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  /* ===== GALLERY ===== */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 220px 220px;
+    gap: 12px;
+  }
+  @media (max-width: 768px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      gap: 8px;
+    }
+    .gallery-grid > div {
+      grid-row: span 1 !important;
+      grid-column: span 1 !important;
+      aspect-ratio: 4/3;
+      height: auto;
+    }
+  }
+
+  /* ===== SERVICE AREAS ===== */
+  .areas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .areas-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  /* ===== CREDENTIAL LOGOS ===== */
+  .credential-logo {
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+  .credential-logo:hover {
+    filter: none;
+    opacity: 1;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+
+  /* ===== HERO GRID ===== */
+  .hero-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 48px 20px 40px;
+    }
+
+    /* Reduce form card padding on mobile */
+    #contact-form {
+      padding: 24px 20px;
+    }
+  }
+</style>
+
+{business.ghlChatEmbed && <Fragment set:html={business.ghlChatEmbed} />}

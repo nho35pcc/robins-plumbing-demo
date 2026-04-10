@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://claude.ai/chat/8142b6c9-a7ae-4849-9306-991037a107cb
+HostUrl=https://claude.ai/api/organizations/51a5250f-5c6f-4675-988d-56a1e9b73aeb/conversations/8142b6c9-a7ae-4849-9306-991037a107cb/wiggle/download-file?path=%2Fmnt%2Fuser-data%2Foutputs%2Fcontact.astro

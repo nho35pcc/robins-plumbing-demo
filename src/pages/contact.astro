@@ -1,0 +1,231 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { business } from '../business.config.js';
+---
+
+<Layout title={`Contact | ${business.name}`}>
+
+  <header class="site-header scrolled" style="background:var(--primary);">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:72px;">
+      <a href="/" style="font-family:var(--font-heading); font-weight:900; font-size:1.3rem; color:var(--white); text-decoration:none; text-transform:uppercase;">{business.name}</a>
+      <nav class="desktop-nav" style="display:flex; gap:32px;">
+        <a href="/services" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Services</a>
+        <a href="/gallery" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Gallery</a>
+        <a href="/about" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">About</a>
+        <a href="/contact" style="color:var(--accent); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Contact</a>
+        {business.photoPageEnabled && <a href="/photo" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Photo Diagnosis</a>}
+      </nav>
+      <a href={`tel:${business.phone}`} class="btn-primary header-phone" style="padding:10px 20px; font-size:0.8rem;">📞 {business.phone}</a>
+      <button id="hamburger-btn" class="hamburger-btn" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-nav" aria-hidden="true">
+    <a href="/services">Services</a>
+    <a href="/about">About</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/contact">Contact</a>
+    {business.photoPageEnabled && <a href="/photo">Photo Diagnosis</a>}
+  </nav>
+
+  <section style={`background:linear-gradient(rgba(0,0,0,0.75), rgba(24,34,64,0.97)), url('${business.heroImageUrl}') center/cover; padding:140px 24px 80px;`}>
+    <div style="max-width:1200px; margin:0 auto; text-align:center;">
+      <span class="section-label">Get In Touch</span>
+      <h1 style="font-size:clamp(2.5rem, 5vw, 4rem); color:var(--white); margin-bottom:16px;">Contact Us</h1>
+      <p style="color:var(--text-light); font-size:1.1rem; max-width:500px; margin:0 auto;">Ready to get started? We'll get back to you fast — usually within the hour.</p>
+    </div>
+  </section>
+
+  <section style="background:var(--primary); padding:80px 24px;">
+    <div style="max-width:1100px; margin:0 auto;" class="contact-cols">
+
+      <div>
+        <h2 style="font-size:1.8rem; color:var(--white); margin-bottom:32px;">Get In Touch</h2>
+
+        <div style="display:flex; flex-direction:column; gap:24px;">
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:44px; height:44px; background:rgba(242,202,82,0.1); border:1px solid var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">📞</div>
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:4px;">Phone</div>
+              <a href={`tel:${business.phone}`} style="color:var(--white); text-decoration:none; font-size:1.1rem; font-weight:600;">{business.phone}</a>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:44px; height:44px; background:rgba(242,202,82,0.1); border:1px solid var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">✉️</div>
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:4px;">Email</div>
+              <a href={`mailto:${business.email}`} style="color:var(--white); text-decoration:none; font-size:1rem;">{business.email}</a>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:44px; height:44px; background:rgba(242,202,82,0.1); border:1px solid var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">📍</div>
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:4px;">Location</div>
+              <div style="color:var(--white); font-size:1rem;">{business.address}</div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:44px; height:44px; background:rgba(242,202,82,0.1); border:1px solid var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:1.2rem;">🕐</div>
+            <div>
+              <div style="font-family:var(--font-heading); font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent); margin-bottom:4px;">Hours</div>
+              <div style="color:var(--white); font-size:1rem;">{business.hours}</div>
+              {business.emergency && <div style="color:var(--accent); font-weight:700; font-size:0.9rem; margin-top:4px;">24/7 Emergency Service</div>}
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:40px; padding:24px; background:rgba(242,202,82,0.08); border:1px solid rgba(242,202,82,0.3); border-radius:10px;">
+          <div style="font-family:var(--font-heading); font-weight:700; text-transform:uppercase; color:var(--accent); margin-bottom:8px; font-size:0.85rem;">Service Areas</div>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            {business.serviceAreas.slice(0, 8).map((area) => (
+              <span style="font-size:0.8rem; color:var(--text-light); background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:4px;">{area}</span>
+            ))}
+            {business.serviceAreas.length > 8 && <span style="font-size:0.8rem; color:var(--accent);">+{business.serviceAreas.length - 8} more</span>}
+          </div>
+        </div>
+      </div>
+
+      <!-- Native Contact Form — POSTs to ghlWebhookUrl -->
+      <div class="contact-form-col" style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:40px;">
+        <h3 style="font-size:1.6rem; color:var(--white); margin-bottom:8px;">Get a Free Quote</h3>
+        <p style="color:var(--text-muted); margin-bottom:28px; font-size:0.9rem;">Fill out the form and we'll get back to you within the hour.</p>
+
+        <form id="contact-page-form" data-webhook={business.ghlWebhookUrl} style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <input type="text" name="firstName" placeholder="First Name *" required />
+            <input type="text" name="lastName" placeholder="Last Name *" required />
+          </div>
+          <input type="tel" name="phone" placeholder="Phone *" required />
+          <input type="email" name="email" placeholder="Email" />
+          <select name="service" style="appearance:none; cursor:pointer;">
+            <option value="" style="color:#111;">Service Needed</option>
+            {(business.services || []).map((s) => (
+              <option value={s.name} style="color:#111;">{s.name}</option>
+            ))}
+          </select>
+          <input type="text" name="address" placeholder="Property Address (optional)" />
+          <textarea name="message" placeholder="Tell us about your project..." rows="4" style="resize:none;"></textarea>
+          <p style="font-size:0.72rem; color:var(--text-muted); line-height:1.4;">
+            By submitting, you agree to receive communications from {business.name}. Reply STOP to opt out.
+          </p>
+          <button type="submit" id="contact-submit-btn" class="btn-primary" style="width:100%; text-align:center; font-size:1rem; padding:16px;">
+            Send My Free Quote →
+          </button>
+        </form>
+
+        <div id="contact-form-success" style="display:none; text-align:center; padding:32px 0;">
+          <div style="font-size:2.5rem; margin-bottom:12px;">✅</div>
+          <h3 style="color:var(--white); font-size:1.3rem; margin-bottom:8px;">Quote Request Sent!</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.5;">We'll get back to you shortly. You can also call us at <a href={`tel:${business.phone}`} style="color:var(--accent); text-decoration:none; font-weight:600;">{business.phone}</a></p>
+        </div>
+
+        <div id="contact-form-error" style="display:none; text-align:center; padding:12px; margin-top:8px; background:rgba(255,60,60,0.1); border:1px solid rgba(255,60,60,0.3); border-radius:5px;">
+          <p style="color:#ff6b6b; font-size:0.85rem;">Something went wrong. Please call us at <a href={`tel:${business.phone}`} style="color:var(--accent); text-decoration:none;">{business.phone}</a></p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GHL Calendar Embed -->
+  {business.ghlCalendarEmbed && (
+    <section style="background:#0a0a0a; padding:80px 24px;">
+      <div style="max-width:900px; margin:0 auto; text-align:center;">
+        <span class="section-label">Schedule Online</span>
+        <h2 style="font-size:clamp(1.8rem, 4vw, 2.5rem); color:var(--white); margin-bottom:12px;">Book a Free Estimate</h2>
+        <p style="color:var(--text-muted); margin-bottom:40px; font-size:1rem;">Pick a time that works for you — no phone call needed.</p>
+        <iframe
+          is:raw
+          src="https://links.tapiq.ai/widget/booking/zMrVPYYwECpzgePECVRu"
+          style="width:100%;height:700px;border:none;overflow:hidden;"
+          id="zMrVPYYwECpzgePECVRu"
+          title="Book a Free Estimate"
+        ></iframe>
+        <script is:inline src="https://links.tapiq.ai/js/form_embed.js"></script>
+      </div>
+    </section>
+  )}
+
+  <footer style="background:#000; padding:32px 24px; text-align:center;">
+    <div style="font-family:var(--font-heading); font-weight:900; color:var(--white); text-transform:uppercase; margin-bottom:8px;">{business.name}</div>
+    <div style="font-size:0.8rem; color:var(--text-muted);">© 2025 {business.name}. All Rights Reserved. · <a href="/" style="color:var(--accent); text-decoration:none;">Home</a></div>
+  </footer>
+
+</Layout>
+
+<script>
+  const contactForm = document.getElementById('contact-page-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const webhook = contactForm.getAttribute('data-webhook');
+      const btn = document.getElementById('contact-submit-btn');
+      const successMsg = document.getElementById('contact-form-success');
+      const errorMsg = document.getElementById('contact-form-error');
+
+      if (!webhook) {
+        alert('Form not configured yet. Please call us directly.');
+        return;
+      }
+
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+      errorMsg.style.display = 'none';
+
+      function sanitize(val, max) {
+        return (val || '').replace(/<[^>]*>/g, '').trim().slice(0, max);
+      }
+      function sanitizePhone(val) {
+        return (val || '').replace(/<[^>]*>/g, '').replace(/[^0-9+()\-\s]/g, '').trim().slice(0, 30);
+      }
+
+      const data = {
+        firstName: sanitize(contactForm.querySelector('[name="firstName"]').value, 100),
+        lastName:  sanitize(contactForm.querySelector('[name="lastName"]').value, 100),
+        phone:     sanitizePhone(contactForm.querySelector('[name="phone"]').value),
+        email:     sanitize(contactForm.querySelector('[name="email"]').value, 254),
+        service:   sanitize(contactForm.querySelector('[name="service"]').value, 100),
+        address:   sanitize(contactForm.querySelector('[name="address"]').value, 500),
+        message:   sanitize(contactForm.querySelector('[name="message"]').value, 500),
+        source: 'contact-page'
+      };
+
+      fetch(webhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('Request failed');
+        contactForm.style.display = 'none';
+        successMsg.style.display = 'block';
+      })
+      .catch(function() {
+        errorMsg.style.display = 'block';
+        btn.textContent = 'Send My Free Quote \u2192';
+        btn.disabled = false;
+      });
+    });
+  }
+</script>
+
+<style>
+  .contact-cols {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .contact-cols {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .contact-form-col {
+      order: -1;
+    }
+  }
+</style>

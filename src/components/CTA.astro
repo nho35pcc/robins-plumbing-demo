@@ -1,0 +1,32 @@
+---
+import { business } from "../business.config.js";
+---
+
+<section
+  style="background:#F2CA52; color:#182240; text-align:center; padding:100px 24px;"
+>
+  <div class="container">
+    <h2 style="color:#182240 !important; margin-bottom:15px;">
+      READY FOR A CLEANER HOME?
+    </h2>
+    <p
+      style="font-size:1.2rem; font-weight:700; margin-bottom:40px; opacity:0.8;"
+    >
+      Join {business.reviews.length}+ happy customers in the {business.city} area.
+    </p>
+    <div
+      style="display:flex; justify-content:center; gap:25px; flex-wrap:wrap;"
+    >
+      <button
+        class="btn-quote"
+        style="background:#182240 !important; color:white !important; padding:25px 60px !important;"
+        >GET MY FREE QUOTE</button
+      >
+      <a
+        href={`tel:${business.phone}`}
+        style="background:transparent; color:#182240; border:3px solid #182240; padding:22px 60px; font-weight:900; text-decoration:none; border-radius:4px; text-transform:uppercase;"
+        >CALL {business.phone}</a
+      >
+    </div>
+  </div>
+</section>

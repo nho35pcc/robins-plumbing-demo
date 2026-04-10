@@ -1,0 +1,44 @@
+---
+import { business } from "../business.config.js";
+---
+
+<section
+  id="about"
+  style="padding: 100px 24px; background: #0a0e1a; border-top: 1px solid rgba(255,255,255,0.05);"
+>
+  <div
+    style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 60px; align-items: center;"
+  >
+    <div>
+      <img
+        src={business.heroImageUrl}
+        alt="About Us"
+        style="width: 100%; border-radius: 8px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);"
+      />
+    </div>
+    <div>
+      <h4
+        style="color: var(--accent); letter-spacing: 2px; font-weight: 900; text-transform: uppercase;"
+      >
+        Our Story
+      </h4>
+      <h2 style="font-size: 2.8rem; font-weight: 900; margin: 10px 0 25px;">
+        VETERAN OWNED & OPERATED
+      </h2>
+      <p
+        style="opacity: 0.7; line-height: 1.8; font-size: 1.05rem; margin-bottom: 30px;"
+      >
+        {business.description}
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        {
+          business.badges.map((badge) => (
+            <div style="background: rgba(242, 202, 82, 0.1); border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 4px; font-weight: 900; font-size: 0.7rem;">
+              ✓ {badge}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,549 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { business } from '../business.config.js';
+
+// aiEnabled controls whether Path B (AI Diagnosis) is shown — not a secret
+const aiEnabled = business.aiDiagnosisEnabled;
+---
+
+<Layout title={`Send Us a Photo | ${business.name}`}>
+
+  {!business.photoPageEnabled && (
+    <script is:inline>window.location.replace('/');</script>
+  )}
+
+  <!-- ========== NAVIGATION ========== -->
+  <header class="site-header" id="site-header">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:72px;">
+      <a href="/" style="display:flex; align-items:center; text-decoration:none;">
+        {business.logoUrl
+          ? <img src={business.logoUrl} alt={business.name} style="height:44px; width:auto;" />
+          : <span style="font-family:var(--font-heading); font-weight:900; font-size:1.3rem; color:var(--white); text-transform:uppercase; letter-spacing:-0.02em;">{business.name}</span>
+        }
+      </a>
+      <nav style="display:flex; align-items:center; gap:32px;" class="desktop-nav">
+        <a href="/services" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9;">Services</a>
+        <a href="/about" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9;">About</a>
+        <a href="/gallery" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9;">Gallery</a>
+        <a href="/contact" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.9;">Contact</a>
+        {business.photoPageEnabled && <a href="/photo" style="color:var(--accent); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em;">Photo Diagnosis</a>}
+      </nav>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <a href={`tel:${business.phone}`} class="header-phone" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.9rem; display:flex; align-items:center; gap:6px;">
+          <span>📞</span> {business.phone}
+        </a>
+        <a href="#" data-quote-modal class="btn-primary quote-cta-btn" style="padding:10px 20px; font-size:0.8rem;">Get Free Quote</a>
+      </div>
+      <button id="hamburger-btn" class="hamburger-btn" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-nav" aria-hidden="true">
+    <a href="/services">Services</a>
+    <a href="/about">About</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/contact">Contact</a>
+    {business.photoPageEnabled && <a href="/photo">Photo Diagnosis</a>}
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section style="background:var(--primary); padding:110px 24px 56px; text-align:center;">
+    <div style="max-width:600px; margin:0 auto;">
+      <span class="section-label">Quick & Easy</span>
+      <h1 style="font-size:clamp(2rem,5vw,3rem); color:var(--white); margin-bottom:16px; line-height:1.1;">
+        Get a Free Estimate<br/><span style="color:var(--accent);">Send Us a Photo</span>
+      </h1>
+      <p style="color:var(--text-muted); font-size:1.05rem; line-height:1.6;">
+        Upload a photo of the work you need done. We'll review it and follow up within the hour.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <section style="background:var(--black); padding:40px 24px 80px;">
+    <div
+      id="photo-page-root"
+      style="max-width:680px; margin:0 auto;"
+      data-photo-webhook={business.ghlPhotoWebhookUrl}
+      data-business-name={business.name}
+      data-ai-enabled={aiEnabled ? 'true' : 'false'}
+      data-cloudinary-cloud-name={business.cloudinaryCloudName}
+      data-cloudinary-upload-preset={business.cloudinaryUploadPreset}
+    >
+
+      <!-- STEP 0: Path selection -->
+      <div id="step-select">
+        <div style={`display:grid; grid-template-columns:${aiEnabled ? '1fr 1fr' : '1fr'}; gap:20px; max-width:${aiEnabled ? '680px' : '400px'}; margin:0 auto;`}>
+
+          <!-- Path A: Send to contractor -->
+          <button id="btn-path-a" style="background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.15); border-radius:12px; padding:36px 24px; text-align:center; cursor:pointer; transition:border-color 0.2s, background 0.2s; color:var(--white); display:flex; flex-direction:column; align-items:center;">
+            <div style="font-size:2.8rem; margin-bottom:16px;">📸</div>
+            <div style="font-family:var(--font-heading); font-weight:900; font-size:1rem; text-transform:uppercase; margin-bottom:10px; color:var(--white);">Send to {business.name}</div>
+            <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.55;">Upload your photo and an expert will review it and follow up within the hour.</p>
+          </button>
+
+          <!-- Path B: AI Diagnosis (only if aiEnabled) -->
+          {aiEnabled && (
+            <button id="btn-path-b" style="background:rgba(255,255,255,0.04); border:2px solid rgba(255,255,255,0.15); border-radius:12px; padding:36px 24px; text-align:center; cursor:pointer; transition:border-color 0.2s, background 0.2s; color:var(--white); display:flex; flex-direction:column; align-items:center;">
+              <div style="font-size:2.8rem; margin-bottom:16px;">🤖</div>
+              <div style="font-family:var(--font-heading); font-weight:900; font-size:1rem; text-transform:uppercase; margin-bottom:10px; color:var(--accent);">Get AI Diagnosis</div>
+              <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.55;">Get an instant AI analysis of your issue, then connect with our team for a free estimate.</p>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <!-- STEP 1: Opt-in form -->
+      <div id="step-form" style="display:none;">
+        <div style="text-align:center; margin-bottom:32px;">
+          <div id="form-path-label" style="font-family:var(--font-heading); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); margin-bottom:8px;"></div>
+          <h2 style="color:var(--white); font-size:1.5rem; text-transform:uppercase; letter-spacing:-0.01em;">First, tell us about yourself</h2>
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-top:8px;">We'll use this to follow up with you about your project.</p>
+        </div>
+
+        <form id="photo-form" style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <input type="text" name="firstName" placeholder="First Name *" required />
+            <input type="text" name="lastName" placeholder="Last Name *" required />
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <input type="tel" name="phone" placeholder="Phone *" required />
+            <input type="email" name="email" placeholder="Email *" required />
+          </div>
+          <input type="text" name="address" placeholder="Property Address *" required />
+
+          <!-- Photo upload drop zone -->
+          <div id="upload-area" style="border:2px dashed rgba(255,255,255,0.2); border-radius:8px; padding:32px 24px; text-align:center; cursor:pointer; transition:border-color 0.2s, background 0.2s;">
+            <div style="font-size:2.2rem; margin-bottom:8px; pointer-events:none;">📷</div>
+            <div style="color:var(--white); font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase; margin-bottom:4px; pointer-events:none;">Click or drag to upload</div>
+            <div style="color:var(--text-muted); font-size:0.78rem; pointer-events:none;">Up to 5 photos — JPG, PNG, HEIC, WEBP</div>
+            <input type="file" id="photo-input" name="photo" accept="image/*" multiple style="display:none;" />
+          </div>
+
+          <!-- Thumbnail grid preview -->
+          <div id="photo-preview" style="display:none;">
+            <div id="thumbnail-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:8px; margin-bottom:8px;"></div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <button type="button" id="add-more-btn" style="background:rgba(255,255,255,0.06); border:1px dashed rgba(255,255,255,0.3); color:var(--white); font-size:0.8rem; padding:4px 12px; border-radius:4px; cursor:pointer;">+ Add more</button>
+              <button type="button" id="remove-photos" style="background:rgba(0,0,0,0.7); border:1px solid rgba(255,255,255,0.3); color:var(--white); font-size:0.75rem; padding:4px 10px; border-radius:4px; cursor:pointer;">&#x2715; Clear all</button>
+              <span id="photo-count-label" style="color:var(--text-muted); font-size:0.75rem; margin-left:auto;"></span>
+            </div>
+          </div>
+
+          <p style="font-size:0.72rem; color:var(--text-muted); line-height:1.4;">
+            By submitting, you agree to receive communications from {business.name}. Reply STOP to opt out.
+          </p>
+
+          <div style="display:flex; gap:12px;">
+            <button type="button" id="back-btn" style="background:none; border:1px solid rgba(255,255,255,0.2); color:var(--text-muted); font-family:var(--font-heading); font-weight:700; text-transform:uppercase; font-size:0.8rem; padding:14px 20px; border-radius:5px; cursor:pointer; white-space:nowrap;">← Back</button>
+            <button type="submit" id="photo-submit" class="btn-primary" style="flex:1; text-align:center; font-size:1rem; padding:16px;">Send My Photo →</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STEP 2A: Path A success -->
+      <div id="step-success-a" style="display:none; text-align:center; padding:60px 0;">
+        <div style="font-size:3.5rem; margin-bottom:16px;">✅</div>
+        <h2 style="color:var(--white); font-size:1.6rem; margin-bottom:12px; text-transform:uppercase;">Photo Sent!</h2>
+        <p style="color:var(--text-muted); font-size:1rem; line-height:1.6; max-width:400px; margin:0 auto 24px;">
+          {business.name} will review your photo and follow up within the hour.
+        </p>
+        <a href={`tel:${business.phone}`} style="display:inline-block; color:var(--accent); font-family:var(--font-heading); font-weight:700; text-decoration:none; font-size:0.9rem; text-transform:uppercase;">📞 Or call us now: {business.phone}</a>
+      </div>
+
+      <!-- STEP 2B: Loading -->
+      <div id="step-loading" style="display:none; text-align:center; padding:60px 0;">
+        <div style="font-size:3rem; margin-bottom:20px; display:inline-block;" id="loading-spinner">⏳</div>
+        <h2 style="color:var(--white); font-size:1.4rem; margin-bottom:8px; text-transform:uppercase;">Analyzing your photo...</h2>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Our AI is reviewing the image. This takes about 10–15 seconds.</p>
+      </div>
+
+      <!-- STEP 2B: Diagnosis result -->
+      <div id="step-diagnosis" style="display:none;">
+        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:28px; margin-bottom:24px;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08);">
+            <span style="font-size:1.4rem;">🤖</span>
+            <div style="font-family:var(--font-heading); font-weight:900; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent);">AI Diagnosis Report</div>
+          </div>
+          <div id="diagnosis-text" style="color:var(--text-light); font-size:0.95rem; line-height:1.75; white-space:pre-wrap;"></div>
+        </div>
+
+        <div style="background:var(--primary); border:2px solid var(--accent); border-radius:12px; padding:32px; text-align:center;">
+          <h3 style="color:var(--white); font-size:1.2rem; margin-bottom:8px;">Ready to get this fixed?</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px; line-height:1.5;">
+            {business.name} can assess this in person and give you a free, no-obligation estimate.
+          </p>
+          <a href="#" data-quote-modal class="btn-primary" style="font-size:1rem; padding:16px 36px;">Get a Free Estimate →</a>
+        </div>
+      </div>
+
+      <!-- Error state -->
+      <div id="step-error" style="display:none; text-align:center; padding:48px 0;">
+        <div style="font-size:2.5rem; margin-bottom:12px;">⚠️</div>
+        <p id="error-msg" style="color:#ff6b6b; font-size:0.95rem; margin-bottom:20px; line-height:1.5;"></p>
+        <button id="retry-btn" style="background:none; border:1px solid rgba(255,255,255,0.2); color:var(--text-muted); font-family:var(--font-heading); font-weight:700; text-transform:uppercase; font-size:0.8rem; padding:12px 24px; border-radius:5px; cursor:pointer;">← Start Over</button>
+      </div>
+
+    </div>
+  </section>
+
+  <style>
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    #loading-spinner { animation: pulse 1.4s ease-in-out infinite; }
+    #btn-path-a:hover, #btn-path-b:hover {
+      border-color: var(--accent) !important;
+      background: rgba(242,202,82,0.06) !important;
+    }
+    #upload-area:hover { border-color: var(--accent) !important; }
+    #upload-area.drag-over { border-color: var(--accent) !important; background: rgba(242,202,82,0.06) !important; }
+  </style>
+
+</Layout>
+
+<script>
+  const root = document.getElementById('photo-page-root') as HTMLElement;
+  const photoWebhook = root?.dataset.photoWebhook || '';
+  const businessName = root?.dataset.businessName || '';
+  const aiEnabled = root?.dataset.aiEnabled === 'true';
+  const cloudinaryCloudName = root?.dataset.cloudinaryCloudName || '';
+  const cloudinaryUploadPreset = root?.dataset.cloudinaryUploadPreset || '';
+
+  // Steps
+  const stepSelect   = document.getElementById('step-select') as HTMLElement;
+  const stepForm     = document.getElementById('step-form') as HTMLElement;
+  const stepSuccessA = document.getElementById('step-success-a') as HTMLElement;
+  const stepLoading  = document.getElementById('step-loading') as HTMLElement;
+  const stepDiagnosis = document.getElementById('step-diagnosis') as HTMLElement;
+  const stepError    = document.getElementById('step-error') as HTMLElement;
+
+  // Form elements
+  const photoForm    = document.getElementById('photo-form') as HTMLFormElement;
+  const photoInput   = document.getElementById('photo-input') as HTMLInputElement;
+  const uploadArea   = document.getElementById('upload-area') as HTMLElement;
+  const photoPreview = document.getElementById('photo-preview') as HTMLElement;
+  const thumbnailGrid = document.getElementById('thumbnail-grid') as HTMLElement;
+  const removePhotos    = document.getElementById('remove-photos') as HTMLButtonElement;
+  const addMoreBtn      = document.getElementById('add-more-btn') as HTMLButtonElement;
+  const photoCountLabel = document.getElementById('photo-count-label') as HTMLElement;
+  const submitBtn    = document.getElementById('photo-submit') as HTMLButtonElement;
+  const backBtn      = document.getElementById('back-btn') as HTMLButtonElement;
+  const formPathLabel = document.getElementById('form-path-label') as HTMLElement;
+  const diagnosisText = document.getElementById('diagnosis-text') as HTMLElement;
+  const errorMsg     = document.getElementById('error-msg') as HTMLElement;
+
+  let selectedPath: 'a' | 'b' = 'a';
+
+  // Multi-photo state — each entry has a resized JPEG data URL and mime type
+  let photos: Array<{ dataUrl: string; mimeType: string }> = [];
+
+  const MAX_PHOTOS = 10;
+
+  function show(el: HTMLElement | null) { if (el) el.style.display = 'block'; }
+  function hide(el: HTMLElement | null) { if (el) el.style.display = 'none'; }
+
+  function showStep(step: HTMLElement) {
+    [stepSelect, stepForm, stepSuccessA, stepLoading, stepDiagnosis, stepError]
+      .forEach(s => { if (s) s.style.display = 'none'; });
+    step.style.display = 'block';
+  }
+
+  function updateCountLabel() {
+    if (photoCountLabel) {
+      photoCountLabel.textContent = `${photos.length} / ${MAX_PHOTOS}`;
+    }
+    // Hide "add more" button once limit is reached
+    if (addMoreBtn) {
+      addMoreBtn.style.display = photos.length >= MAX_PHOTOS ? 'none' : '';
+    }
+  }
+
+  function resetPhotos() {
+    photos = [];
+    photoInput.value = '';
+    thumbnailGrid.innerHTML = '';
+    updateCountLabel();
+    hide(photoPreview);
+    show(uploadArea);
+  }
+
+  // Path selection
+  document.getElementById('btn-path-a')?.addEventListener('click', () => {
+    selectedPath = 'a';
+    formPathLabel.textContent = `Sending photo to ${businessName}`;
+    submitBtn.textContent = 'Send My Photo →';
+    showStep(stepForm);
+  });
+
+  document.getElementById('btn-path-b')?.addEventListener('click', () => {
+    selectedPath = 'b';
+    formPathLabel.textContent = 'Getting AI Diagnosis';
+    submitBtn.textContent = 'Get My AI Diagnosis →';
+    showStep(stepForm);
+  });
+
+  // Back button
+  backBtn?.addEventListener('click', () => {
+    showStep(stepSelect);
+    photoForm.reset();
+    resetPhotos();
+  });
+
+  // Retry button
+  document.getElementById('retry-btn')?.addEventListener('click', () => {
+    showStep(stepSelect);
+    photoForm.reset();
+    resetPhotos();
+  });
+
+  // Clear all photos
+  removePhotos?.addEventListener('click', () => {
+    resetPhotos();
+  });
+
+  // "Add more" button — opens file picker to append more photos (up to limit)
+  addMoreBtn?.addEventListener('click', () => photoInput?.click());
+
+  // Photo upload — click to open file picker
+  uploadArea?.addEventListener('click', () => photoInput?.click());
+
+  // Drag and drop — supports multiple files
+  uploadArea?.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('drag-over');
+  });
+  uploadArea?.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+  uploadArea?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+    const files = Array.from(e.dataTransfer?.files || []).filter(f => f.type.startsWith('image/'));
+    if (files.length > 0) loadPhotoFiles(files);
+  });
+
+  // File input change — supports multiple files
+  photoInput?.addEventListener('change', () => {
+    const files = Array.from(photoInput.files || []);
+    if (files.length > 0) loadPhotoFiles(files);
+  });
+
+  // Resize a single file and return { dataUrl, mimeType }
+  function resizeFile(file: File): Promise<{ dataUrl: string; mimeType: string }> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 1024;
+        const ratio = Math.min(maxDim / img.width, maxDim / img.height, 1);
+        canvas.width = Math.round(img.width * ratio);
+        canvas.height = Math.round(img.height * ratio);
+        canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(objectUrl);
+        resolve({
+          dataUrl: canvas.toDataURL('image/jpeg', 0.82),
+          mimeType: 'image/jpeg'
+        });
+      };
+      img.src = objectUrl;
+    });
+  }
+
+  // Append a thumbnail to the grid for a given dataUrl
+  function addThumbnail(dataUrl: string) {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:relative; aspect-ratio:1; overflow:hidden; border-radius:6px;';
+    const img = document.createElement('img');
+    img.src = dataUrl;
+    img.style.cssText = 'width:100%; height:100%; object-fit:cover;';
+    wrapper.appendChild(img);
+    thumbnailGrid.appendChild(wrapper);
+  }
+
+  // Load multiple files: resize each, append to photos array (up to MAX_PHOTOS total)
+  async function loadPhotoFiles(files: File[]) {
+    const remaining = MAX_PHOTOS - photos.length;
+    if (remaining <= 0) return;
+    const toProcess = files.slice(0, remaining);
+
+    for (const file of toProcess) {
+      const result = await resizeFile(file);
+      photos.push(result);
+      addThumbnail(result.dataUrl);
+    }
+
+    if (photos.length > 0) {
+      hide(uploadArea);
+      show(photoPreview);
+      updateCountLabel();
+    }
+  }
+
+  // Extract base64 data without the data URL prefix
+  function stripDataUrlPrefix(dataUrl: string): string {
+    return dataUrl.split(',')[1] || '';
+  }
+
+  // Upload a single photo to Cloudinary into the given folder, return secure_url or ''
+  async function uploadToCloudinary(dataUrl: string, folder: string): Promise<string> {
+    if (!cloudinaryCloudName || !cloudinaryUploadPreset) {
+      console.error('[Photo Upload] Cloudinary not configured — cloudinaryCloudName:', cloudinaryCloudName || '(empty)', 'cloudinaryUploadPreset:', cloudinaryUploadPreset || '(empty)');
+      return '';
+    }
+    try {
+      const blob = await fetch(dataUrl).then(r => r.blob());
+      const fd = new FormData();
+      fd.append('file', blob, 'photo.jpg');
+      fd.append('upload_preset', cloudinaryUploadPreset);
+      fd.append('folder', folder);
+      console.log('[Photo Upload] Uploading to Cloudinary folder:', folder, '| cloud:', cloudinaryCloudName, '| preset:', cloudinaryUploadPreset);
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
+        { method: 'POST', body: fd }
+      );
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => '');
+        console.error('[Photo Upload] Cloudinary upload failed:', res.status, errBody);
+        return '';
+      }
+      const data = await res.json();
+      const url = (data as any).secure_url || '';
+      console.log('[Photo Upload] Cloudinary upload success:', url);
+      return url;
+    } catch (err) {
+      console.error('[Photo Upload] Cloudinary upload threw:', err);
+      return '';
+    }
+  }
+
+  // POST to GHL — fires Workflow 07 (photo intake: contact creation + photo fields + welcome SMS)
+  async function postToGHL(payload: Record<string, string>) {
+    if (!photoWebhook) {
+      console.error('[GHL] No photo webhook URL configured — skipping POST');
+      return;
+    }
+    try {
+      console.log('[GHL][WF07] Posting payload:', payload);
+      const res = await fetch(photoWebhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) {
+        console.error('[GHL][WF07] Webhook POST failed:', res.status, await res.text().catch(() => ''));
+      }
+    } catch (err) {
+      console.error('[GHL][WF07] Webhook POST threw:', err);
+    }
+  }
+
+  // Call server-side AI endpoint — Anthropic key never touches the browser.
+  // Sends all photos for multi-image analysis.
+  async function getDiagnosis(photoList: Array<{ dataUrl: string; mimeType: string }>): Promise<string> {
+    const images = photoList.map(p => ({
+      image: stripDataUrlPrefix(p.dataUrl),
+      mimeType: p.mimeType
+    }));
+
+    const res = await fetch('/api/diagnose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ images })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error((err as any)?.error || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data.diagnosis;
+  }
+
+  // Form submit
+  photoForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (photos.length === 0) {
+      alert('Please upload at least one photo before submitting.');
+      return;
+    }
+
+    function sanitize(val: string, max: number): string {
+      return (val || '').replace(/<[^>]*>/g, '').trim().slice(0, max);
+    }
+    function sanitizePhone(val: string): string {
+      return (val || '').replace(/<[^>]*>/g, '').replace(/[^0-9+()\-\s]/g, '').trim().slice(0, 30);
+    }
+
+    const firstName = sanitize((photoForm.querySelector('[name="firstName"]') as HTMLInputElement).value, 100);
+    const lastName  = sanitize((photoForm.querySelector('[name="lastName"]') as HTMLInputElement).value, 100);
+    const phone     = sanitizePhone((photoForm.querySelector('[name="phone"]') as HTMLInputElement).value);
+    const email     = sanitize((photoForm.querySelector('[name="email"]') as HTMLInputElement).value, 254);
+    const address   = sanitize((photoForm.querySelector('[name="address"]') as HTMLInputElement).value, 500);
+
+    // Generate a session UUID to group all photos from this submission into one Cloudinary folder
+    const sessionId = crypto.randomUUID();
+    const folder = `leads/${sessionId}`;
+
+    submitBtn.textContent = `Uploading ${photos.length} photo${photos.length > 1 ? 's' : ''}...`;
+    submitBtn.disabled = true;
+
+    // Upload all photos in parallel — never block lead if Cloudinary fails
+    const uploadResults = await Promise.all(
+      photos.map(p => uploadToCloudinary(p.dataUrl, folder))
+    );
+    const photoUrls = uploadResults.filter(u => u !== '');
+
+    // Newline-joined list of working Cloudinary URLs for this submission
+    const photoUrlsJoined = photoUrls.join('\n');
+
+    if (selectedPath === 'a') {
+      // Path A: POST to GHL with individual photo URLs, show success
+      submitBtn.textContent = 'Sending...';
+      await postToGHL({
+        firstName, lastName, phone, email, address,
+        photo_urls: photoUrlsJoined,
+        photo_count: String(photoUrls.length),
+        photo_lead_source: 'Website Form',
+        source: 'photo-page',
+        tags: 'photo-lead'
+      });
+      showStep(stepSuccessA);
+
+    } else {
+      // Path B: Call Claude Vision API with all photos, then POST to GHL
+      showStep(stepLoading);
+
+      try {
+        const summary = await getDiagnosis(photos);
+
+        // POST to GHL — non-blocking
+        postToGHL({
+          firstName, lastName, phone, email, address,
+          photo_urls: photoUrlsJoined,
+          photo_count: String(photoUrls.length),
+          ai_summary: summary,
+          photo_lead_source: 'Website Form',
+          source: 'photo-page-ai',
+          tags: 'photo-lead,ai-diagnosis'
+        });
+
+        diagnosisText.textContent = summary;
+        showStep(stepDiagnosis);
+
+      } catch (err: any) {
+        errorMsg.textContent = err?.message?.includes('API')
+          ? `AI diagnosis unavailable: ${err.message}. You can still send your photo directly.`
+          : 'Something went wrong. Please try again or call us directly.';
+        showStep(stepError);
+        submitBtn.textContent = 'Get My AI Diagnosis →';
+        submitBtn.disabled = false;
+      }
+    }
+  });
+
+  // Sticky header scroll behavior (matches other pages)
+  window.addEventListener('scroll', () => {
+    const header = document.getElementById('site-header');
+    if (header) header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+</script>

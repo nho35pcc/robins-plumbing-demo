@@ -1,0 +1,321 @@
+---
+import '../styles/global.css';
+import { business } from '../business.config.js';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${business.name} | ${business.tagline}`,
+  description = business.description,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=Montserrat:wght@400;600;700;900&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <Fragment set:html={`<style>:root { --primary: ${business.primaryColor}; --accent: ${business.accentColor}; }</style>`} />
+  </head>
+  <body>
+    <slot />
+
+    <!-- ========== QUOTE MODAL ========== -->
+    <div id="quote-modal" style="display:none; position:fixed; inset:0; z-index:9999; align-items:center; justify-content:center; padding:24px;">
+      <div id="quote-modal-backdrop" style="position:absolute; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px);"></div>
+      <div style="position:relative; background:var(--primary); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:40px; max-width:480px; width:100%; box-shadow:0 24px 80px rgba(0,0,0,0.6); max-height:90vh; overflow-y:auto;">
+        <button id="quote-modal-close" style="position:absolute; top:16px; right:16px; background:none; border:none; color:var(--text-muted); font-size:1.5rem; cursor:pointer; line-height:1; padding:4px;">✕</button>
+
+        <div style="text-align:center; margin-bottom:24px;">
+          {business.logoUrl
+            ? <img src={business.logoUrl} alt={business.name} style="height:50px; width:auto; margin:0 auto 8px;" />
+            : <div style="font-family:var(--font-heading); font-weight:900; font-size:1.1rem; color:var(--white); text-transform:uppercase; margin-bottom:4px;">{business.name}</div>
+          }
+          <div style="font-family:var(--font-heading); font-size:0.75rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em;">{business.tagline}</div>
+        </div>
+
+        <h3 style="text-align:center; font-size:1.5rem; margin-bottom:8px; color:var(--white);">Get a Free Quote</h3>
+        <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; margin-bottom:24px;">We'll get back to you within the hour.</p>
+
+        <form id="quote-modal-form" data-webhook={business.ghlWebhookUrl} style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <input type="text" name="firstName" placeholder="First Name *" required />
+            <input type="text" name="lastName" placeholder="Last Name *" required />
+          </div>
+          <input type="tel" name="phone" placeholder="Phone *" required />
+          <select name="service" style="appearance:none; cursor:pointer;">
+            <option value="" style="color:#111;">Service Needed</option>
+            {business.services.map((s) => (
+              <option value={s.name} style="color:#111;">{s.name}</option>
+            ))}
+          </select>
+          <textarea name="message" placeholder="Tell us about your project..." rows="3" style="resize:none;"></textarea>
+          <p style="font-size:0.72rem; color:var(--text-muted); line-height:1.4;">
+            By submitting, you agree to receive communications from {business.name}. Reply STOP to opt out.
+          </p>
+          <button type="submit" id="quote-modal-submit" class="btn-primary" style="width:100%; text-align:center; font-size:1rem; padding:16px;">
+            Send My Free Quote →
+          </button>
+        </form>
+
+        <div id="quote-modal-success" style="display:none; text-align:center; padding:20px 0;">
+          <div style="font-size:2.5rem; margin-bottom:12px;">✅</div>
+          <h3 style="color:var(--white); font-size:1.3rem; margin-bottom:8px;">Quote Request Sent!</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.5;">We'll get back to you shortly. You can also call us at <a href={`tel:${business.phone}`} style="color:var(--accent); text-decoration:none; font-weight:600;">{business.phone}</a></p>
+        </div>
+
+        <div id="quote-modal-error" style="display:none; text-align:center; padding:12px; margin-top:8px; background:rgba(255,60,60,0.1); border:1px solid rgba(255,60,60,0.3); border-radius:5px;">
+          <p style="color:#ff6b6b; font-size:0.85rem;">Something went wrong. Please call us at <a href={`tel:${business.phone}`} style="color:var(--accent); text-decoration:none;">{business.phone}</a></p>
+        </div>
+      </div>
+    </div>
+
+    <script is:inline>
+    (function() {
+      var modal = document.getElementById('quote-modal');
+      var backdrop = document.getElementById('quote-modal-backdrop');
+      var closeBtn = document.getElementById('quote-modal-close');
+      var form = document.getElementById('quote-modal-form');
+      var successMsg = document.getElementById('quote-modal-success');
+      var errorMsg = document.getElementById('quote-modal-error');
+      var submitBtn = document.getElementById('quote-modal-submit');
+
+      function openModal(e) {
+        e.preventDefault();
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+
+      // Attach to all elements with data-quote-modal
+      document.querySelectorAll('[data-quote-modal]').forEach(function(el) {
+        el.addEventListener('click', openModal);
+        el.style.cursor = 'pointer';
+      });
+
+      backdrop.addEventListener('click', closeModal);
+      closeBtn.addEventListener('click', closeModal);
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+      });
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var webhook = form.getAttribute('data-webhook');
+
+        // If no webhook configured, fall back to contact page
+        if (!webhook) {
+          closeModal();
+          window.location.href = '/contact';
+          return;
+        }
+
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        errorMsg.style.display = 'none';
+
+        function sanitize(val, max) {
+          return (val || '').replace(/<[^>]*>/g, '').trim().slice(0, max);
+        }
+        function sanitizePhone(val) {
+          return (val || '').replace(/<[^>]*>/g, '').replace(/[^0-9+()\-\s]/g, '').trim().slice(0, 30);
+        }
+
+        var data = {
+          firstName: sanitize(form.querySelector('[name="firstName"]').value, 100),
+          lastName:  sanitize(form.querySelector('[name="lastName"]').value, 100),
+          phone:     sanitizePhone(form.querySelector('[name="phone"]').value),
+          service:   sanitize(form.querySelector('[name="service"]').value, 100),
+          message:   sanitize(form.querySelector('[name="message"]').value, 500),
+          source: window.location.pathname
+        };
+
+        fetch(webhook, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        .then(function(res) {
+          if (!res.ok) throw new Error('Request failed');
+          form.style.display = 'none';
+          successMsg.style.display = 'block';
+        })
+        .catch(function() {
+          errorMsg.style.display = 'block';
+          submitBtn.textContent = 'Send My Free Quote →';
+          submitBtn.disabled = false;
+        });
+      });
+
+      // Mobile hamburger menu — full-screen overlay
+      var hamburger = document.getElementById('hamburger-btn');
+      var mobileMenu = document.getElementById('mobile-menu');
+      if (hamburger && mobileMenu) {
+        // Inject yellow X close button into overlay
+        var navClose = document.createElement('button');
+        navClose.className = 'mobile-nav-close';
+        navClose.setAttribute('aria-label', 'Close navigation menu');
+        navClose.textContent = '✕';
+        mobileMenu.appendChild(navClose);
+
+        function closeMobileMenu() {
+          mobileMenu.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+          mobileMenu.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        }
+        hamburger.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (mobileMenu.classList.contains('open')) {
+            closeMobileMenu();
+          } else {
+            mobileMenu.classList.add('open');
+            hamburger.setAttribute('aria-expanded', 'true');
+            mobileMenu.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+        navClose.addEventListener('click', closeMobileMenu);
+        mobileMenu.querySelectorAll('a').forEach(function(link) {
+          link.addEventListener('click', closeMobileMenu);
+        });
+      }
+    })();
+    </script>
+
+    <script is:inline src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="69bf835e65af0bbb882e9b2f"></script>
+
+    <!-- ========== FLOATING VERTICAL CTA TAB (desktop) ========== -->
+    <a href="#contact-form" id="floating-cta" class="floating-cta" aria-label="Get a Free Estimate">
+      Get a Free Estimate
+    </a>
+
+    <!-- ========== MOBILE STICKY CTA BAR ========== -->
+    <div class="mobile-cta-bar" id="mobile-cta-bar">
+      <a href={`tel:${business.phone}`} class="mobile-cta-call" aria-label="Call us">
+        📞 {business.phone}
+      </a>
+      <a href="#contact-form" id="mobile-cta-estimate" class="mobile-cta-estimate">
+        Free Estimate
+      </a>
+    </div>
+
+    <!-- ========== SCROLL REVEAL ========== -->
+    <script is:inline>
+    (function() {
+      var revealObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            revealObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function(el) {
+        revealObs.observe(el);
+      });
+
+      // Stagger children — applies reveal-scale + incremental delay to each child
+      document.querySelectorAll('.stagger-children').forEach(function(parent) {
+        Array.from(parent.children).forEach(function(child, i) {
+          child.style.transitionDelay = (i * 80) + 'ms';
+          child.classList.add('reveal-scale');
+          revealObs.observe(child);
+        });
+      });
+    })();
+    </script>
+
+    <!-- ========== STAT COUNTERS ========== -->
+    <script is:inline>
+    (function() {
+      function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+      function animateCounter(el) {
+        var text = el.textContent.trim();
+        var numMatch = text.match(/[\d,]+/);
+        if (!numMatch) return;
+        var end = parseInt(numMatch[0].replace(/,/g, ''), 10);
+        var suffix = text.replace(/[\d,]+/, '');
+        var start = null;
+        var duration = 2000;
+        function step(ts) {
+          if (!start) start = ts;
+          var progress = Math.min((ts - start) / duration, 1);
+          var val = Math.floor(easeOutCubic(progress) * end);
+          el.textContent = val.toLocaleString() + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      var counterObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            counterObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('.stat-counter').forEach(function(el) {
+        counterObs.observe(el);
+      });
+    })();
+    </script>
+
+    <!-- ========== NAV + FLOATING CTA + MOBILE BAR JS ========== -->
+    <script is:inline>
+    (function() {
+      // Nav scroll state
+      var header = document.getElementById('site-header');
+      if (header) {
+        window.addEventListener('scroll', function() {
+          if (window.scrollY > 80) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
+        }, { passive: true });
+      }
+
+      // Floating CTA slide-in after 1200ms
+      var floatingCta = document.getElementById('floating-cta');
+      if (floatingCta) {
+        setTimeout(function() { floatingCta.classList.add('is-visible'); }, 1200);
+        floatingCta.addEventListener('click', function(e) {
+          e.preventDefault();
+          var form = document.getElementById('contact-form');
+          if (form) form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
+
+      // Mobile CTA — estimate button scrolls to form
+      var mobileEst = document.getElementById('mobile-cta-estimate');
+      if (mobileEst) {
+        mobileEst.addEventListener('click', function(e) {
+          e.preventDefault();
+          var form = document.getElementById('contact-form');
+          if (form) form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+      }
+    })();
+    </script>
+  </body>
+</html>

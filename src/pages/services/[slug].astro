@@ -1,0 +1,174 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { business } from '../../business.config.js';
+
+export function getStaticPaths() {
+  return business.services
+    .filter(s => s.slug)
+    .map(s => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props;
+const pageTitle = `${service.name} in ${business.city}, ${business.state}`;
+---
+
+<Layout title={`${service.name} | ${business.name}`} description={`Professional ${service.name.toLowerCase()} services in ${business.city}, ${business.state}. ${service.description}`}>
+
+  <!-- Nav -->
+  <header class="site-header scrolled" style="background:var(--primary);">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; height:72px;">
+      <a href="/" style="font-family:var(--font-heading); font-weight:900; font-size:1.3rem; color:var(--white); text-decoration:none; text-transform:uppercase;">{business.name}</a>
+      <nav class="desktop-nav" style="display:flex; gap:32px;">
+        <a href="/services" style="color:var(--accent); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Services</a>
+        <a href="/gallery" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Gallery</a>
+        <a href="/about" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">About</a>
+        <a href="/contact" style="color:var(--white); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Contact</a>
+        {business.photoPageEnabled && <a href="/photo" style="color:var(--accent); text-decoration:none; font-family:var(--font-heading); font-weight:700; font-size:0.85rem; text-transform:uppercase;">Photo Diagnosis</a>}
+      </nav>
+      <a href="#" data-quote-modal class="btn-primary quote-cta-btn" style="padding:10px 20px; font-size:0.8rem;">Get Free Quote</a>
+      <button id="hamburger-btn" class="hamburger-btn" aria-label="Open navigation menu" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <nav id="mobile-menu" class="mobile-nav" aria-hidden="true">
+    <a href="/services">Services</a>
+    <a href="/about">About</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/contact">Contact</a>
+    {business.photoPageEnabled && <a href="/photo">Photo Diagnosis</a>}
+  </nav>
+
+  <!-- Hero -->
+  <section style={`background:linear-gradient(rgba(0,0,0,0.7), rgba(24,34,64,0.95)), url('${service.image || business.heroImageUrl}') center/cover; padding:140px 24px 80px;`}>
+    <div style="max-width:1200px; margin:0 auto; text-align:center;">
+      <span class="section-label">{business.name}</span>
+      <h1 style="font-size:clamp(2.2rem, 5vw, 3.5rem); color:var(--white); margin-bottom:16px;">{pageTitle}</h1>
+      <p style="color:var(--text-light); font-size:1.1rem; max-width:600px; margin:0 auto 32px;">{service.description}</p>
+      <a href="#" data-quote-modal class="btn-primary">Get a Free Quote</a>
+    </div>
+  </section>
+
+  <!-- Trust bar -->
+  <div style="background:var(--accent); padding:14px 24px;">
+    <div style="max-width:1200px; margin:0 auto; display:flex; justify-content:center; gap:40px; flex-wrap:wrap;">
+      {(business.badges || []).map((badge) => (
+        <div style="font-family:var(--font-heading); font-weight:700; font-size:0.85rem; color:#000; text-transform:uppercase;">✓ {badge}</div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Description + Photos -->
+  <section style="background:var(--white); padding:80px 24px;">
+    <div style="max-width:1000px; margin:0 auto;">
+      <div style="color:#333; font-size:1.05rem; line-height:1.8; margin-bottom:48px;">
+        <p>{service.longDescription || service.description}</p>
+      </div>
+
+      <!-- Photo grid -->
+      <div class="photo-grid">
+        {(service.serviceImages || [service.image || business.heroImageUrl, business.heroImageUrl, business.heroImageUrl]).slice(0, 6).map((img, i) => (
+          <div style={`border-radius:8px; overflow:hidden; ${i === 0 ? 'grid-row:span 2;' : ''} aspect-ratio:${i === 0 ? '3/4' : '4/3'};`}>
+            <img src={img} alt={`${service.name} - Photo ${i + 1}`} style="width:100%; height:100%; object-fit:cover;" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion -->
+  {service.faqs && service.faqs.length > 0 && (
+    <section style="background:var(--primary); padding:80px 24px;">
+      <div style="max-width:800px; margin:0 auto;">
+        <div style="text-align:center; margin-bottom:48px;">
+          <span class="section-label">Common Questions</span>
+          <h2 class="section-title" style="font-size:2rem;">FAQ</h2>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          {service.faqs.map((faq) => (
+            <details style="background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:20px 24px;">
+              <summary style="font-family:var(--font-heading); font-weight:700; font-size:0.95rem; color:var(--white); cursor:pointer; text-transform:uppercase; letter-spacing:0.03em;">{faq.q}</summary>
+              <p style="color:var(--text-light); line-height:1.7; margin-top:12px; font-size:0.95rem;">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Reviews -->
+  <section style="background:#000; padding:80px 24px;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <div style="text-align:center; margin-bottom:48px;">
+        <span class="section-label">Customer Reviews</span>
+        <h2 class="section-title" style="font-size:2rem;">Reviews</h2>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-bottom:40px;">
+        {(business.reviews || []).map((review) => (
+          <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:28px;">
+            <div style="display:flex; gap:2px; margin-bottom:12px;">
+              {[1,2,3,4,5].map(() => <span style="color:var(--accent);">★</span>)}
+            </div>
+            <p style="color:var(--text-light); line-height:1.6; font-size:0.95rem; margin-bottom:16px; font-style:italic;">"{review.text}"</p>
+            <div style="font-family:var(--font-heading); font-weight:700; font-size:0.9rem; color:var(--white);">{review.name}</div>
+            <div style="font-size:0.8rem; color:var(--text-muted);">{review.location}</div>
+          </div>
+        ))}
+      </div>
+      <div style="text-align:center;">
+        <a href="/review" class="btn-primary" style="font-size:0.85rem; padding:10px 24px;">Leave a Review</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Service Areas -->
+  <section style="background:var(--primary); padding:80px 24px;">
+    <div style="max-width:1000px; margin:0 auto; text-align:center;">
+      <span class="section-label">Proudly Serving</span>
+      <h2 class="section-title" style="font-size:2rem; margin-bottom:32px;">These Areas</h2>
+      <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-bottom:40px;">
+        {(business.serviceAreas || []).map((area) => (
+          <span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:5px; padding:8px 16px; font-size:0.85rem; color:var(--text-light);">{area}, {business.state}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer CTA -->
+  <section style={`background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${service.image || business.heroImageUrl}') center/cover; padding:80px 24px; text-align:center;`}>
+    <div style="max-width:700px; margin:0 auto;">
+      <h2 style="font-family:var(--font-heading); font-weight:900; font-size:clamp(1.6rem, 4vw, 2.5rem); text-transform:uppercase; color:var(--white); margin-bottom:12px;">Ready to Take the Next Step?</h2>
+      <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:32px;">Get a free quote today!</p>
+      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a href="#" data-quote-modal class="btn-primary">Get a Free Quote</a>
+        <a href={`tel:${business.phone}`} class="btn-outline">Call {business.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background:#000; padding:32px 24px; text-align:center;">
+    <div style="font-family:var(--font-heading); font-weight:900; color:var(--white); text-transform:uppercase; margin-bottom:8px;">{business.name}</div>
+    <div style="font-size:0.8rem; color:var(--text-muted);">© 2025 {business.name}. All Rights Reserved. · <a href="/" style="color:var(--accent); text-decoration:none;">Home</a> · <a href="/services" style="color:var(--accent); text-decoration:none;">Services</a> · <a href="/contact" style="color:var(--accent); text-decoration:none;">Contact</a></div>
+  </footer>
+
+
+<style>
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 768px) {
+    .photo-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .photo-grid > div,
+    .photo-grid > div:first-child {
+      grid-row: span 1 !important;
+      aspect-ratio: 4/3 !important;
+    }
+  }
+</style>
+
+</Layout>
