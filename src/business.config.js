@@ -3,189 +3,147 @@
 // ============================================
 
 export const business = {
-  // Core identity
-  name: "DR Pressure",
-  tagline: "The Power Washing Experts",
-  subtagline: "Serving Eastern Massachusetts",
-  description: "A local, veteran-owned washing company providing high-quality services for Eastern Massachusetts. Licensed, insured, and trusted by hundreds of homeowners.",
-  phone: "(508) 250-3907",
-  email: "drpressurepowerwashing@gmail.com",
-  address: "35 Charles Street, Holliston, MA 01746",
-  city: "Holliston",
-  state: "MA",
-  zip: "01746",
+  name: "Robins Plumbing, Inc.",
+  tagline: "A Higher Level of Service",
+  subtagline: "24/7 residential and commercial plumbing across Phoenix and the Valley.",
+  description: "Robins Plumbing, Inc. is a Phoenix-based plumbing company serving homeowners and businesses across the Valley with honest, high-quality service. They provide 24-hour emergency response, drain and sewer solutions, water heater service, water treatment systems, repiping, and general plumbing repairs backed by a strong reputation for professionalism and communication.",
+  phone: "623-486-4657",
+  email: "info@robinsplumbing.com",
+  address: "2802 N 37 Ave",
+  city: "Phoenix",
+  state: "AZ",
+  zip: "85009",
 
-  // Branding
-  primaryColor: "#182240",
-  accentColor: "#F2CA52",
+  primaryColor: "#1E5AA8",
+  accentColor: "#D62828",
+  logoUrl: "https://www.robinsplumbing.com/wp-content/uploads/2018/12/newlogo-5c279a42903e2.png",
+  heroImageUrl: "https://www.robinsplumbing.com/wp-content/uploads/2021/11/Popup-61896b80cb070.jpg",
+  heroLayout: "split",
+  heroHeadlineAccent: "Higher Level",
+  heroReviewRating: "4.9",
+  heroReviewCount: "578+",
+  heroReviewSource: "Google",
 
-  // Logo — paste direct URL or leave empty for text logo
-  logoUrl: "",
+  credentialLogos: [
+    { name: "BBB A Rating", imageUrl: "https://www.robinsplumbing.com/wp-content/uploads/2022/04/bbb-a-rating-5bfd732c50612.png" },
+    { name: "Best of the Valley 2025", imageUrl: "https://www.robinsplumbing.com/wp-content/uploads/2022/04/best-of-the-valley-2025.png" },
+  ],
 
-  // Hero image — main background photo
-  heroImageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80",
-
-  // Hero v2 fields — all optional, have safe defaults
-  heroLayout: "split",          // "split" | "stacked"
-  heroHeadlineAccent: "The Power Washing", // phrase highlighted in accent color
-  heroReviewRating: "4.9",      // shown as ★ in hero
-  heroReviewCount: "200+",      // "Based on X reviews"
-  heroReviewSource: "Google",   // platform name
-
-  // Credential logos — renders section only if array has entries
-  credentialLogos: [],          // [{ name: "GAF", imageUrl: "https://..." }]
-
-  // Gallery images — 6 distinct photos (section 2.13 fix)
   galleryImages: [
-    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
-    "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&q=80",
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80",
-    "https://images.unsplash.com/photo-1558618047-3c8d19950e62?w=800&q=80",
+    "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1591955506264-3f5a6834570a?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1521207418485-99c705420785?auto=format&fit=crop&w=1200&q=80",
   ],
 
-  // Trust badges
   badges: [
-    "Licensed & Insured",
-    "Veteran-Owned",
-    "Free Estimates",
-    "20+ Years Experience",
+    "24/7 Emergency Service",
+    "Licensed, Bonded & Insured",
+    "Women-Owned Business",
+    "BBB Accredited",
+    "Award-Winning Phoenix Plumbers",
+    "3 Valley Locations",
   ],
 
-  // Services — first 4 shown in homepage grid, all shown on /services page
   services: [
     {
-      name: "Roof Cleaning",
-      icon: "🏠",
-      slug: "roof-cleaning",
-      description: "Safe, thorough cleaning that removes moss, algae, and debris to extend the life of your roof.",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+      name: "Drain Cleaning",
+      icon: "🚿",
+      slug: "drain-cleaning",
+      description: "Fast, professional drain clearing for sinks, showers, toilets, and main sewer lines using advanced diagnostics when needed.",
+      image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      name: "House Washing",
-      icon: "🪣",
-      slug: "house-washing",
-      description: "Restore your home's curb appeal with our gentle soft-wash system that removes dirt, mold, and stains.",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+      name: "Water Heater Repair & Installation",
+      icon: "🔥",
+      slug: "water-heaters",
+      description: "Repair, replacement, and upgrades for standard tank, hybrid electric, gas, and tankless water heaters.",
+      image: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1200&q=80",
     },
     {
-      name: "Driveway Wash",
-      icon: "🚗",
-      slug: "driveway-wash",
-      description: "High-pressure cleaning that removes oil stains, tire marks, and years of grime from concrete and pavers.",
-      image: "https://images.unsplash.com/photo-1460317442991-0ec209397118?w=800&q=80",
-    },
-    {
-      name: "Deck Wash",
-      icon: "🌿",
-      slug: "deck-wash",
-      description: "Bring your deck back to life with professional cleaning that removes weathering, algae, and discoloration.",
-      image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
-    },
-    {
-      name: "Gutter Cleaning",
-      icon: "🌧️",
-      slug: "gutter-cleaning",
-      description: "Prevent water damage with thorough gutter cleaning and flushing to keep your drainage flowing.",
-      image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80",
-    },
-    {
-      name: "Pressure Washing",
+      name: "Water Treatment Systems",
       icon: "💧",
-      slug: "pressure-washing",
-      description: "Commercial-grade pressure washing for fences, patios, walkways, and more — fast and effective.",
-      image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
+      slug: "water-treatment",
+      description: "Whole-home filtration, reverse osmosis, and water softener solutions designed for Phoenix hard water conditions.",
+      image: "https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      name: "Sewer Line Repair & Trenchless Solutions",
+      icon: "🔧",
+      slug: "sewer-line-repair",
+      description: "Sewer diagnostics, line repair, replacement, and trenchless options that minimize disruption to your property.",
+      image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      name: "Whole Home Repiping",
+      icon: "🏠",
+      slug: "repiping",
+      description: "Replace aging plumbing with durable modern piping to improve flow, reduce leaks, and protect your home long term.",
+      image: "https://images.unsplash.com/photo-1591955506264-3f5a6834570a?auto=format&fit=crop&w=1200&q=80",
+    },
+    {
+      name: "Emergency Plumbing",
+      icon: "🚨",
+      slug: "emergency-plumbing",
+      description: "24-hour emergency plumbing response for urgent leaks, backups, and other critical plumbing issues throughout the Valley.",
+      image: "https://images.unsplash.com/photo-1521207418485-99c705420785?auto=format&fit=crop&w=1200&q=80",
     },
   ],
 
-  // Process steps
   process: [
-    { step: "1", title: "Contact Us", desc: "Call or fill out our form for a free quote." },
-    { step: "2", title: "Free Estimate", desc: "We'll assess your property and provide a detailed quote." },
-    { step: "3", title: "Schedule Job", desc: "Pick a time that works for you." },
-    { step: "4", title: "We Do The Work", desc: "Our team arrives on time and gets the job done right." },
-    { step: "5", title: "You're Amazed", desc: "Quality check, final walkthrough, and payment." },
+    { step: "1", title: "Call or Request Service", desc: "Reach the team any time, day or night, for immediate help or to schedule a convenient appointment window." },
+    { step: "2", title: "Inspection & Options", desc: "A technician evaluates the issue, explains the findings clearly, and walks you through the best repair or replacement options." },
+    { step: "3", title: "Professional Repair", desc: "Repairs are completed by licensed plumbing professionals using quality workmanship and clear communication throughout the job." },
+    { step: "4", title: "Follow-Through & Peace of Mind", desc: "The team reviews the completed work, answers questions, and helps you prevent future plumbing issues." },
   ],
 
-  // Reviews
   reviews: [
-    { name: "Denish M.", location: "Weston, MA", text: "Very nice, great customer service, amazing flexibility and very good job results." },
-    { name: "Barbara T.", location: "Newton Center, MA", text: "Excellent service. Easy to work with. Does extra tasks without having to be asked." },
-    { name: "Mark S.", location: "Chestnut Hill, MA", text: "Adam is personable and knowledgeable. He puts a lot of effort into getting the job done right." },
+    { name: "Bert", location: "Phoenix, AZ", text: "Matthew, Brian and the Robins Plumbing team did a stellar job replacing my water line. They explained our options clearly and delivered outstanding customer service and communication." },
+    { name: "Candace", location: "Glendale, AZ", text: "We had a plumbing emergency and Robins sent Justin out quickly. He explained the problem, completed the project, and was very professional." },
+    { name: "Susan", location: "Scottsdale, AZ", text: "Exceptional service. Matthew communicated every step, explained options without jargon, and completed the work with great skill and attention to detail." },
+    { name: "Jessica", location: "Phoenix, AZ", text: "They came out the same day when we heard a leak in our walls. Justin explained the problem clearly and got it fixed. They felt trustworthy and helpful." },
+    { name: "Kelli", location: "Peoria, AZ", text: "We have used Robins Plumbing twice for emergencies and both times they came the same day. The work was done correctly and the technicians were kind and trustworthy." },
+    { name: "Olga", location: "Tempe, AZ", text: "Robins Plumbing was excellent. Eddie came out right away and fixed my clogged kitchen sink very efficiently. Very pleasant and knowledgeable." },
   ],
 
-  // Service areas
   serviceAreas: [
-    "Holliston", "Natick", "Weston", "Wayland", "Framingham",
-    "Wellesley", "Medfield", "Dover", "Newton", "Waltham",
-    "Needham", "Dedham", "Brookline", "Marlborough", "Ashland",
+    "Phoenix", "Glendale", "Scottsdale", "Tempe", "Mesa",
+    "Chandler", "Gilbert", "Peoria", "Goodyear", "Surprise",
+    "El Mirage", "Buckeye", "Fountain Hills", "Apache Junction",
+    "Paradise Valley", "Cave Creek", "Litchfield Park", "Tolleson",
   ],
 
-  // ============================================
-  // GHL INTEGRATIONS
-  // ============================================
-
-  // Inbound webhook — all custom forms POST here (Workflow 02: contact creation + welcome SMS)
-  ghlWebhookUrl: "https://services.leadconnectorhq.com/hooks/3RfcMWhxieVF840CC9bG/webhook-trigger/66b24783-73bd-4afe-a8e8-c726b5ef1bb2",
-
-  // Photo-specific webhook — /photo page POSTs here in addition to ghlWebhookUrl (Workflow 07: photo intake)
-  // Leave empty string until Workflow 07 inbound webhook is created in GHL
-  ghlPhotoWebhookUrl: "https://services.leadconnectorhq.com/hooks/3RfcMWhxieVF840CC9bG/webhook-trigger/33b635d6-f5c7-43ad-a866-467f6839d724",
-
-  // Legacy embed codes (contact page iframe)
-  ghlFormEmbed: ``,
-
-  // Chat widget (bottom right corner of every page)
-  ghlChatEmbed: ``,
-
-  // Calendar embed (for booking page or contact page)
-  ghlCalendarEmbed: ``,
-
-  // ============================================
-  // GOOGLE MAPS API KEY
-  // Get free key from console.cloud.google.com
-  // Enable "Maps Embed API" — free up to 28k loads/month
-  // One key works for ALL client sites
-  // ============================================
-  googleMapsApiKey: "AIzaSyAUwC6c6YuK0vNzJt4kURUrGaxd28FfvNI",
-
-  // Social links (renders widget if array has entries)
   socialLinks: [
-    { platform: "google", url: "https://g.page/drpressure", label: "Google" },
-    { platform: "facebook", url: "https://facebook.com/drpressure", label: "Facebook" },
-    { platform: "yelp", url: "https://yelp.com/biz/dr-pressure", label: "Yelp" },
+    { platform: "facebook", url: "https://www.facebook.com/Robins-Plumbing-INC-144928712256607/", label: "Facebook" },
+    { platform: "instagram", url: "https://www.instagram.com/robinsplumbing/", label: "Instagram" },
+    { platform: "youtube", url: "http://www.youtube.com/c/RobinsPlumbingIncGlendale", label: "YouTube" },
+    { platform: "yelp", url: "https://www.yelp.com/biz/robins-plumbing-glendale", label: "Yelp" },
   ],
 
-  // Review gate
-  googleReviewUrl: "",
-  reviewPlatforms: [],
+  googleReviewUrl: "https://g.page/r/CfFoRKB8oinrEBM/review",
+  reviewPlatforms: [
+    { name: "Google", url: "https://g.page/r/CfFoRKB8oinrEBM/review" },
+    { name: "BBB", url: "https://www.bbb.org/us/az/phoenix/profile/plumber/robins-plumbing-inc-1126-29003353" },
+    { name: "Yelp", url: "https://www.yelp.com/biz/robins-plumbing-glendale" },
+    { name: "Facebook", url: "https://www.facebook.com/Robins-Plumbing-INC-144928712256607/reviews" },
+  ],
 
-  // Hours
-  hours: "Mon–Sun: 8:00 AM – 8:00 PM",
+  hours: "Mon–Sun: Open 24 Hours",
   emergency: true,
 
-  // ============================================
-  // PHOTO DIAGNOSIS PAGE
-  // ============================================
-
-  // Enables /photo.astro page and nav link
   photoPageEnabled: true,
-
-  // Enables Path B (AI diagnosis) on photo page — requires anthropicApiKey
   aiDiagnosisEnabled: true,
-
-  // GHL Workflow 7 follow-up mode: "auto" | "approval"
   followUpMode: "approval",
 
-  // Anthropic API key for client-side Claude Vision calls on photo page
-  // NOTE: This key is visible in page source. Use Vercel env var ANTHROPIC_API_KEY
-  // at build time instead — set it in Vercel project settings for production.
+  ghlWebhookUrl: "",
+  ghlPhotoWebhookUrl: "",
+  ghlFormEmbed: ``,
+  ghlChatEmbed: ``,
+  ghlCalendarEmbed: ``,
+  googleMapsApiKey: "",
   anthropicApiKey: "",
-
-  // Cloudinary — used to upload photos from /photo page before sending URL to GHL
-  // Get cloud name from cloudinary.com dashboard; create an unsigned upload preset
-  // under Settings → Upload → Upload Presets
-  cloudinaryCloudName: import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME || "",
-  cloudinaryUploadPreset: import.meta.env.PUBLIC_CLOUDINARY_UPLOAD_PRESET || "",
+  cloudinaryCloudName: "",
+  cloudinaryUploadPreset: "",
 };
